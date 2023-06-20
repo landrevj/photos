@@ -2,7 +2,7 @@ import Meta, { defaultMetaProps } from '@/components/layout/meta';
 
 export default function Custom404() {
   return (
-    <div className="h-screen w-full flex justify-center items-center">
+    <div className='flex h-screen w-full items-center justify-center bg-slate-50 '>
       <Meta
         props={{
           ...defaultMetaProps,

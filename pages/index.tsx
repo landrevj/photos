@@ -1,4 +1,3 @@
-import clientPromise from '@/lib/mongodb';
 import Layout from '@/components/layout';
 
 export default function Home() {

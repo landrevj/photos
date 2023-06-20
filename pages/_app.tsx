@@ -1,17 +1,22 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import '@/styles/globals.css';
 import { AppProps } from 'next/app';
-import { SessionProvider } from 'next-auth/react';
 import Layout from '@/components/layout';
+import { Provider } from 'react-redux';
+import { SessionProvider } from 'next-auth/react';
+import { wrapper } from '@/lib/redux/store';
 
-export default function MyApp({
-  Component,
-  pageProps: { session, ...pageProps }
-}: AppProps) {
+export default function MyApp({ Component, ...rest }: AppProps) {
+  const { store, props } = wrapper.useWrappedStore(rest);
+  const { pageProps } = props;
+
   return (
-    <SessionProvider session={session}>
-      <Layout {...pageProps}>
-        <Component {...pageProps} />
-      </Layout>
+    <SessionProvider session={pageProps.session}>
+      <Provider store={store}>
+        <Layout {...pageProps}>
+          <Component {...pageProps} />
+        </Layout>
+      </Provider>
     </SessionProvider>
   );
 }

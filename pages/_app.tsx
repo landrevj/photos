@@ -6,7 +6,7 @@ import { Provider } from 'react-redux';
 import { SessionProvider } from 'next-auth/react';
 import { wrapper } from '@/lib/redux/store';
 
-export default function MyApp({ Component, ...rest }: AppProps) {
+export default ({ Component, ...rest }: AppProps) => {
   const { store, props } = wrapper.useWrappedStore(rest);
   const { pageProps } = props;
 
@@ -19,4 +19,4 @@ export default function MyApp({ Component, ...rest }: AppProps) {
       </Provider>
     </SessionProvider>
   );
-}
+};

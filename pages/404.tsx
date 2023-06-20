@@ -1,6 +1,6 @@
 import Meta, { defaultMetaProps } from '@/components/layout/meta';
 
-export default function Custom404() {
+export const Custom400 = () => {
   return (
     <div className='flex h-screen w-full items-center justify-center bg-slate-50 '>
       <Meta
@@ -13,4 +13,6 @@ export default function Custom404() {
       <h1>404</h1>
     </div>
   );
-}
+};
+
+export default Custom400;

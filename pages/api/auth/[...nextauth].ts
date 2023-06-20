@@ -1,7 +1,7 @@
-import NextAuth from 'next-auth';
+import clientPromise from 'lib/mongodb';
 import GitHubProvider from 'next-auth/providers/github';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
-import clientPromise from 'lib/mongodb';
+import NextAuth from 'next-auth';
 
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
@@ -17,16 +17,16 @@ export default NextAuth({
           email: profile.email,
           image: profile.avatar_url,
           followers: profile.followers,
-          verified: true
+          verified: true,
         };
-      }
-    })
+      },
+    }),
   ],
   callbacks: {
     async session({ session, user }) {
       // Send properties to the client, like an access_token from a provider.
       session.username = user.username;
       return session;
-    }
-  }
+    },
+  },
 });

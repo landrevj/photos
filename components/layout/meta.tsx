@@ -15,7 +15,7 @@ export interface MetaProps {
   ogImage: string;
 }
 
-export default function Meta({ props }: { props: MetaProps }) {
+export default function Meta({ props }: { props: MetaProps}) {
   return (
     <Head>
       <title>{props.title}</title>

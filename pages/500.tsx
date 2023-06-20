@@ -1,9 +1,8 @@
 import Meta, { defaultMetaProps } from '@/components/layout/meta';
-export { getStaticProps } from '.';
 
 export default function Custom500() {
   return (
-    <div className="h-screen w-full flex justify-center items-center bg-black">
+    <div className="h-screen w-full flex justify-center items-center">
       <Meta
         props={{
           ...defaultMetaProps,
@@ -11,8 +10,8 @@ export default function Custom500() {
           ogUrl: 'https://mongodb.vercel.app/500'
         }}
       />
-      <h1 className="text-2xl font-light text-white">
-        500 <span className="mx-3 text-4xl">|</span> Internal Server Occured
+      <h1 className="text-2xl ">
+        500
       </h1>
     </div>
   );

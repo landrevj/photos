@@ -23,14 +23,20 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     "tailwind.config.js",
-    "prettier.config.js"
+    "prettier.config.js",
+    ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", ".next"]
 }

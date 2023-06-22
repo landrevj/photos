@@ -1,9 +1,9 @@
-import clientPromise from 'lib/mongodb';
+import clientPromise from '@/lib/mongodb';
 import GitHubProvider from 'next-auth/providers/github';
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import NextAuth from 'next-auth';
 
-export default NextAuth({
+const handler = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     GitHubProvider({
@@ -30,3 +30,5 @@ export default NextAuth({
     },
   },
 });
+
+export { handler as GET, handler as POST };

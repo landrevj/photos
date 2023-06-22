@@ -7,13 +7,14 @@ const nextConfig = {
       'avatars.githubusercontent.com',
       'avatar.tobi.sh',
       'cloudflare-ipfs.com',
-      'loremflickr.com'
-    ]
+      'loremflickr.com',
+    ],
   },
   experimental: {
     legacyBrowsers: false,
+    appDir: true,
     // browsersListForSwc: true
-  }
+  },
 };
 
 module.exports = nextConfig;

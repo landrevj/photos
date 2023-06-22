@@ -17,6 +17,9 @@
       { "allowSeparatedGroups": true, "ignoreCase": true }
     ],
     "import/no-named-as-default": "off",
+    "import/prefer-default-export": "off",
+    "@next/next/no-server-import-in-page": "off",
+    "@typescript-eslint/lines-between-class-members": "off",
 
     // react
     "react/prop-types": "off",

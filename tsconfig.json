@@ -36,6 +36,7 @@
     "**/*.tsx",
     "tailwind.config.js",
     "prettier.config.js",
+    "next.config.js",
     ".next/types/**/*.ts"
   ],
   "exclude": ["node_modules", ".next"]

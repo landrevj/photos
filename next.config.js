@@ -3,7 +3,10 @@ const nextConfig = {
   swcMinify: true,
   reactStrictMode: true,
   images: {
-    domains: ['landrevj-photos-dev.s3-us-west-2.amazonaws.com'],
+    domains: [
+      'landrevj-photos-dev.s3-us-west-2.amazonaws.com',
+      'landrevj-photos-prod.s3-us-west-2.amazonaws.com',
+    ],
   },
   experimental: {
     legacyBrowsers: false,

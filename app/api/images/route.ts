@@ -7,7 +7,6 @@ export const GET = async () => {
   const client = await clientPromise;
   const cursor = client.db(DB_NAME).collection('images').find();
   const images = await cursor.toArray();
-  console.log(images);
   return NextResponse.json(images);
 };
 

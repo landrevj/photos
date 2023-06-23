@@ -12,8 +12,6 @@ export const Home = () => {
   const [perf, setPerf] = useState<string | number | undefined>(undefined);
   // const [ta, setTa] = useState(undefined);
 
-  console.log(data);
-
   useEffect(() => {
     if (file) {
       let percentage: number;

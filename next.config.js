@@ -4,8 +4,7 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      'landrevj-photos-dev.s3-us-west-2.amazonaws.com',
-      'landrevj-photos-prod.s3-us-west-2.amazonaws.com',
+      `${process.env.S3_BUCKET_NAME}.s3-${process.env.AWS_REGION}.amazonaws.com`,
     ],
   },
   experimental: {

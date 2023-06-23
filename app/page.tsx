@@ -76,7 +76,7 @@ export const Home = () => {
           data.map((image) => (
             <Image
               key={image.key}
-              src={`http://landrevj-photos-dev.s3-us-west-2.amazonaws.com/${image.key}`}
+              src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/${image.key}`}
               alt='image'
               width={300}
               height={100}

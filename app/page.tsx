@@ -75,8 +75,8 @@ export const Home = () => {
         {isSuccess &&
           data.map((image) => (
             <Image
-              key={image.key}
-              src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/${image.key}`}
+              key={image.awsFilename}
+              src={`${process.env.NEXT_PUBLIC_CLOUDFRONT_BASE_URL}/${image.awsFilename}`}
               alt='image'
               width={300}
               height={100}

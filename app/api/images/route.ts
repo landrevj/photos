@@ -11,9 +11,9 @@ export const GET = async () => {
 };
 
 export const PUT = async (req: NextRequest) => {
-  const { key, name, size, type } = await req.json();
+  const { awsFilename, name, size, type } = await req.json();
   const client = await clientPromise;
-  const image = { key, name, size, type };
+  const image = { awsFilename, name, size, type };
   await client.db(DB_NAME).collection('images').insertOne(image);
   return NextResponse.json(image);
 };

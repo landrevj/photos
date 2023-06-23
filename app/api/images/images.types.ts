@@ -4,9 +4,9 @@ export interface Image {
    */
   _id: string;
   /**
-   * The s3 file key for the image
+   * The aws file key for the image
    */
-  key: string;
+  awsFilename: string;
   /**
    * The file's name
    */

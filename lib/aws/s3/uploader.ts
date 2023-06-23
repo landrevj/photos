@@ -21,6 +21,7 @@ export class Uploader {
   threadsQuantity: number;
   timeout: number;
   file: File;
+  uploadFilename: string;
   aborted: boolean;
   uploadedSize: number;
   progressCache: Record<any, any>;
@@ -51,6 +52,9 @@ export class Uploader {
     // adjust the timeout value to activate exponential backoff retry strategy
     this.timeout = 0;
     this.file = options.file;
+    this.uploadFilename = this.useUUIDForKey
+      ? `${uuid()}.${this.file.name.split('.').pop()}`
+      : this.file.name;
     this.aborted = false;
     this.uploadedSize = 0;
     this.progressCache = {};
@@ -69,14 +73,9 @@ export class Uploader {
 
   async initialize() {
     try {
-      // adding the the file extension (if present) to fileName
-      const fileName = this.useUUIDForKey
-        ? `${uuid()}.${this.file.name.split('.').pop()}`
-        : this.file.name;
-
       // initializing the multipart request
       const videoInitializationUploadInput = {
-        name: `images/${fileName}`,
+        name: `images/${this.uploadFilename}`,
       };
 
       const initializeResponse = await fetch(
@@ -188,7 +187,7 @@ export class Uploader {
         method: 'PUT',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          key: this.fileKey,
+          awsFilename: this.uploadFilename,
           name: this.file.name,
           size: this.file.size,
           type: this.file.type,

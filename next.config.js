@@ -4,12 +4,11 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      `${process.env.S3_BUCKET_NAME}.s3-${process.env.AWS_REGION}.amazonaws.com`,
+      process.env.NEXT_PUBLIC_CLOUDFRONT_BASE_URL.split('https://').pop(),
     ],
   },
   experimental: {
     legacyBrowsers: false,
-    // browsersListForSwc: true
   },
 };
 

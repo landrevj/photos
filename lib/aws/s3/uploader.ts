@@ -5,7 +5,6 @@ interface UploaderOptions {
   chunkSize: number;
   threadsQuantity: number;
   file: File;
-  baseURL: string;
   useUUIDForKey?: boolean;
 }
 
@@ -36,7 +35,6 @@ export class Uploader {
     percentage: number;
   }) => void;
   onErrorFn: (error: unknown) => void;
-  baseURL: string;
 
   constructor(options: UploaderOptions) {
     this.useTransferAcceleration = options.useTransferAcceleration;
@@ -63,7 +61,6 @@ export class Uploader {
     this.fileKey = null;
     this.onProgressFn = () => {};
     this.onErrorFn = () => {};
-    this.baseURL = options.baseURL;
   }
 
   start() {
@@ -83,7 +80,7 @@ export class Uploader {
       };
 
       const initializeResponse = await fetch(
-        `${this.baseURL}/api/aws/s3/multiPartUpload/initialize`,
+        '/api/aws/s3/multiPartUpload/initialize',
         {
           method: 'POST',
           body: JSON.stringify(videoInitializationUploadInput),
@@ -104,13 +101,10 @@ export class Uploader {
         parts: numberOfParts,
       };
 
-      const urlsResponse = await fetch(
-        `${this.baseURL}/api/aws/s3/preSignedUrls`,
-        {
-          method: 'POST',
-          body: JSON.stringify(AWSMultipartFileDataInput),
-        }
-      );
+      const urlsResponse = await fetch('/api/aws/s3/preSignedUrls', {
+        method: 'POST',
+        body: JSON.stringify(AWSMultipartFileDataInput),
+      });
       const urlsData = await urlsResponse.json();
 
       const newParts = urlsData.parts;
@@ -213,7 +207,7 @@ export class Uploader {
         parts: this.uploadedParts,
       };
 
-      await fetch(`${this.baseURL}/api/aws/s3/multiPartUpload/finalize`, {
+      await fetch('/api/aws/s3/multiPartUpload/finalize', {
         method: 'POST',
         body: JSON.stringify(videoFinalizationMultiPartInput),
       });

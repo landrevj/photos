@@ -20,7 +20,6 @@ export const Home = () => {
       setPerf('-');
       const uploader = new Uploader({
         file,
-        baseURL: process.env.NEXT_PUBLIC_BASE_URL || '',
         chunkSize: Number(process.env.NEXT_PUBLIC_UPLOAD_PART_SIZE ?? 5),
         threadsQuantity: Number(process.env.NEXT_PUBLIC_UPLOAD_THREADS ?? 1),
         useTransferAcceleration: false,

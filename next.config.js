@@ -3,12 +3,7 @@ const nextConfig = {
   swcMinify: true,
   reactStrictMode: true,
   images: {
-    domains: [
-      'avatars.githubusercontent.com',
-      'avatar.tobi.sh',
-      'cloudflare-ipfs.com',
-      'loremflickr.com',
-    ],
+    domains: ['landrevj-photos-dev.s3-us-west-2.amazonaws.com'],
   },
   experimental: {
     legacyBrowsers: false,

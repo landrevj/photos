@@ -1,9 +1,12 @@
+import { v4 as uuid } from 'uuid';
+
 interface UploaderOptions {
   useTransferAcceleration: boolean;
   chunkSize: number;
   threadsQuantity: number;
   file: File;
   baseURL: string;
+  useUUIDForKey?: boolean;
 }
 
 type Part = {
@@ -14,6 +17,7 @@ type Part = {
 // @see https://github.com/aws-samples/amazon-s3-multipart-upload-transfer-acceleration/blob/main/frontendV2/src/utils/upload.js
 export class Uploader {
   useTransferAcceleration: boolean;
+  useUUIDForKey: boolean;
   chunkSize: number;
   threadsQuantity: number;
   timeout: number;
@@ -36,6 +40,7 @@ export class Uploader {
 
   constructor(options: UploaderOptions) {
     this.useTransferAcceleration = options.useTransferAcceleration;
+    this.useUUIDForKey = !!options.useUUIDForKey;
     // this must be bigger than or equal to 5MB,
     // otherwise AWS will respond with:
     // "Your proposed upload is smaller than the minimum allowed size"
@@ -68,11 +73,13 @@ export class Uploader {
   async initialize() {
     try {
       // adding the the file extension (if present) to fileName
-      const fileName = this.file.name;
+      const fileName = this.useUUIDForKey
+        ? `${uuid()}.${this.file.name.split('.').pop()}`
+        : this.file.name;
 
       // initializing the multipart request
       const videoInitializationUploadInput = {
-        name: fileName,
+        name: `images/${fileName}`,
       };
 
       const initializeResponse = await fetch(
@@ -145,6 +152,7 @@ export class Uploader {
         })
         .catch((error) => {
           if (retry <= 6) {
+            // eslint-disable-next-line no-param-reassign
             retry += 1;
             const wait = (ms: number) =>
               new Promise((res) => {
@@ -182,6 +190,16 @@ export class Uploader {
 
     try {
       await this.sendCompleteRequest();
+      await fetch('/api/images', {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          key: this.fileKey,
+          name: this.file.name,
+          size: this.file.size,
+          type: this.file.type,
+        }),
+      });
     } catch (err) {
       this.onErrorFn(err);
     }

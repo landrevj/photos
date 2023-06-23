@@ -1,29 +1,33 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 import { Uploader } from '@/lib/aws/s3/uploader';
+import { useGetAllImagesQuery } from '@/lib/redux/state/api';
 
 export const Home = () => {
+  const { data, isSuccess } = useGetAllImagesQuery();
   const [file, setFile] = useState<File | undefined>(undefined);
   const [pgvalue, setPgvalue] = useState<number | undefined>(undefined);
   const [perf, setPerf] = useState<string | number | undefined>(undefined);
   // const [ta, setTa] = useState(undefined);
 
+  console.log(data);
+
   useEffect(() => {
     if (file) {
-      const uploaderOptions = {
+      let percentage: number;
+
+      setPgvalue(0);
+      setPerf('-');
+      const uploader = new Uploader({
         file,
         baseURL: process.env.NEXT_PUBLIC_BASE_URL || '',
         chunkSize: Number(process.env.NEXT_PUBLIC_UPLOAD_PART_SIZE ?? 5),
         threadsQuantity: Number(process.env.NEXT_PUBLIC_UPLOAD_THREADS ?? 1),
         useTransferAcceleration: false,
-      };
-
-      let percentage: number;
-
-      setPgvalue(0);
-      setPerf('-');
-      const uploader = new Uploader(uploaderOptions);
+        useUUIDForKey: true,
+      });
       const tBegin = performance.now();
       uploader
         .onProgress(({ percentage: newPercentage }: { percentage: number }) => {
@@ -69,6 +73,18 @@ export const Home = () => {
         <span id='output'>
           {pgvalue}% ({perf} sec)
         </span>
+      </div>
+      <div>
+        {isSuccess &&
+          data.map((image) => (
+            <Image
+              key={image.key}
+              src={`http://landrevj-photos-dev.s3-us-west-2.amazonaws.com/${image.key}`}
+              alt='image'
+              width={300}
+              height={100}
+            />
+          ))}
       </div>
     </div>
   );

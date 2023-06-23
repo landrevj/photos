@@ -7,13 +7,12 @@ import {
   useSelector as reduxUseSelector,
   TypedUseSelectorHook,
 } from 'react-redux';
-import type { makeStore } from './store';
+import store from './store';
 
 export * from '@reduxjs/toolkit';
 
-export type AppStore = ReturnType<typeof makeStore>;
-export type RootState = ReturnType<AppStore['getState']>;
-export type AppDispatch = AppStore['dispatch'];
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
 
 export const useDispatch: () => AppDispatch = reduxUseDispatch;
 export const useSelector: TypedUseSelectorHook<RootState> = reduxUseSelector;

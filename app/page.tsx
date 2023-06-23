@@ -6,11 +6,10 @@ import { Uploader } from '@/lib/aws/s3/uploader';
 import { useGetAllImagesQuery } from '@/lib/redux/state/api';
 
 export const Home = () => {
-  const { data, isSuccess } = useGetAllImagesQuery();
+  const { data, isSuccess, refetch } = useGetAllImagesQuery();
   const [file, setFile] = useState<File | undefined>(undefined);
   const [pgvalue, setPgvalue] = useState<number | undefined>(undefined);
   const [perf, setPerf] = useState<string | number | undefined>(undefined);
-  // const [ta, setTa] = useState(undefined);
 
   useEffect(() => {
     if (file) {
@@ -37,6 +36,14 @@ export const Home = () => {
             setPgvalue(percentage);
           }
         })
+        .onSuccess(async (image) => {
+          await fetch('/api/images', {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify(image),
+          });
+          refetch();
+        })
         .onError((error) => {
           setFile(undefined);
           console.error(error);
@@ -52,7 +59,7 @@ export const Home = () => {
       <div
         style={{ backgroundColor: '#e2e2e2', padding: '20px', margin: '10px' }}
       >
-        <strong style={{ display: 'block' }}>Step 5 - Choose a file</strong>
+        <strong style={{ display: 'block' }}>Step 1 - Choose a file</strong>
         <br />
         <input
           type='file'
@@ -65,7 +72,7 @@ export const Home = () => {
       <div
         style={{ backgroundColor: '#e2e2e2', padding: '20px', margin: '10px' }}
       >
-        <strong style={{ display: 'block' }}>Step 6 - Monitor</strong>
+        <strong style={{ display: 'block' }}>Step 2 - Monitor</strong>
         <br />
         <span id='output'>
           {pgvalue}% ({perf} sec)

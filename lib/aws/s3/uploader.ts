@@ -1,3 +1,4 @@
+import { Image } from '@/app/api/images/images.types';
 import { v4 as uuid } from 'uuid';
 
 interface UploaderOptions {
@@ -36,6 +37,7 @@ export class Uploader {
     percentage: number;
   }) => void;
   onErrorFn: (error: unknown) => void;
+  onSuccessFn: (fileData: Partial<Image>) => void;
 
   constructor(options: UploaderOptions) {
     this.useTransferAcceleration = options.useTransferAcceleration;
@@ -65,6 +67,7 @@ export class Uploader {
     this.fileKey = null;
     this.onProgressFn = () => {};
     this.onErrorFn = () => {};
+    this.onSuccessFn = () => {};
   }
 
   start() {
@@ -183,15 +186,11 @@ export class Uploader {
 
     try {
       await this.sendCompleteRequest();
-      await fetch('/api/images', {
-        method: 'PUT',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          awsFilename: this.uploadFilename,
-          name: this.file.name,
-          size: this.file.size,
-          type: this.file.type,
-        }),
+      this.onSuccessFn({
+        awsFilename: this.uploadFilename,
+        name: this.file.name,
+        size: this.file.size,
+        type: this.file.type,
       });
     } catch (err) {
       this.onErrorFn(err);
@@ -352,6 +351,11 @@ export class Uploader {
 
   onError(onError: (error: unknown) => void) {
     this.onErrorFn = onError;
+    return this;
+  }
+
+  onSuccess(onSuccess: (fileData: Partial<Image>) => void) {
+    this.onSuccessFn = onSuccess;
     return this;
   }
 

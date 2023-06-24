@@ -4,7 +4,7 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      process.env.NEXT_PUBLIC_CLOUDFRONT_BASE_URL.split('https://').pop(),
+      `${process.env.S3_BUCKET_NAME}.s3-${process.env.AWS_REGION}.amazonaws.com`,
     ],
   },
   experimental: {

@@ -1,8 +1,10 @@
+import { ObjectId } from 'mongodb';
+
 export interface Image {
   /**
    * Mongodb id
    */
-  _id: string;
+  _id: ObjectId;
   /**
    * The aws file key for the image
    */
@@ -16,7 +18,50 @@ export interface Image {
    */
   size: number;
   /**
-   * Mime type of the image
+   * Pixel width of image
    */
-  type: string;
+  width: number;
+  /**
+   * Pixel height of image
+   */
+  height: number;
+  /**
+   * RGB Histogram data
+   */
+  histogram: number[][];
+  /**
+   * Image tag data
+   */
+  meta: {
+    /**
+     * Image exif data
+     */
+    exif?: Record<any, any>;
+    /**
+     * Image tiff data
+     */
+    tiff?: Record<any, any>;
+  };
+  colors: {
+    /**
+     * Hex string for the image's dominant color
+     */
+    dominant: string;
+    /**
+     * Hex string for the image's dominant color's complement
+     */
+    complement: string;
+  };
+  /**
+   * Datetime the photo was taken (exif DateTimeOriginal) or the createdAt date if unspecified
+   */
+  takenAt: Date;
+  /**
+   * DB document creation date
+   */
+  createdAt: Date;
+  /**
+   * DB document last modified date
+   */
+  updatedAt: Date;
 }

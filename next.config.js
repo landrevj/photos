@@ -10,6 +10,12 @@ const nextConfig = {
   experimental: {
     legacyBrowsers: false,
   },
+  webpack: (config) => {
+    // @see https://github.com/konvajs/konva/issues/1458#issuecomment-1356122802
+    // eslint-disable-next-line no-param-reassign
+    config.externals = [...config.externals, { canvas: 'canvas' }];
+    return config;
+  },
 };
 
 module.exports = nextConfig;

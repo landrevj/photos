@@ -1,4 +1,3 @@
-import { Image } from '@/app/api/images/images.types';
 import { v4 as uuid } from 'uuid';
 
 interface UploaderOptions {
@@ -37,7 +36,7 @@ export class Uploader {
     percentage: number;
   }) => void;
   onErrorFn: (error: unknown) => void;
-  onSuccessFn: (fileData: Partial<Image>) => void;
+  onSuccessFn: (fileData: { awsFilename: string; file: File }) => void;
 
   constructor(options: UploaderOptions) {
     this.useTransferAcceleration = options.useTransferAcceleration;
@@ -188,9 +187,7 @@ export class Uploader {
       await this.sendCompleteRequest();
       this.onSuccessFn({
         awsFilename: this.uploadFilename,
-        name: this.file.name,
-        size: this.file.size,
-        type: this.file.type,
+        file: this.file,
       });
     } catch (err) {
       this.onErrorFn(err);
@@ -354,7 +351,9 @@ export class Uploader {
     return this;
   }
 
-  onSuccess(onSuccess: (fileData: Partial<Image>) => void) {
+  onSuccess(
+    onSuccess: (fileData: { awsFilename: string; file: File }) => void
+  ) {
     this.onSuccessFn = onSuccess;
     return this;
   }

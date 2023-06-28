@@ -8,9 +8,12 @@ export const api = createApi({
     getAllImages: builder.query<Image[], void>({
       query: () => 'images',
     }),
+    getRandomHeroImage: builder.query<Image, void>({
+      query: () => 'images/random',
+    }),
   }),
 });
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetAllImagesQuery } = api;
+export const { useGetAllImagesQuery, useGetRandomHeroImageQuery } = api;

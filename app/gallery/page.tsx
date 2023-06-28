@@ -7,11 +7,6 @@ import NextImage from 'next/image';
 import { Uploader } from '@/lib/aws/s3/uploader';
 import { useGetAllImagesQuery } from '@/lib/redux/state/api';
 
-const a: unknown = {
-  asdf: 1,
-};
-a.asdf;
-
 export const Home = () => {
   const { data, isSuccess, refetch } = useGetAllImagesQuery();
   const [file, setFile] = useState<File | undefined>(undefined);

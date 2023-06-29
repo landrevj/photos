@@ -11,7 +11,7 @@ import Navbar from '@/components/Navbar/Navbar';
 export const HomePage = () => {
   return (
     <main className='container mx-auto px-8'>
-      <Navbar />
+      <Navbar activeRoute='/' />
       <Home />
     </main>
   );

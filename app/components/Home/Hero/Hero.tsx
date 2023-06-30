@@ -9,7 +9,7 @@ import NextImage from 'next/image';
 import { useGetRandomHeroImageQuery } from '@/lib/redux/state/api';
 
 /** helpers */
-import { createImageColorDataUrl } from '@/lib/image';
+import { createImageColorDataUrl } from '@/lib/images/utils';
 
 /** types */
 import { ReactNode } from 'react';

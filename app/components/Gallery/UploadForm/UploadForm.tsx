@@ -10,7 +10,7 @@ import ImageJs from 'image-js';
 /** state */
 
 /** helpers */
-import { getImageColors } from '@/lib/image';
+import { getImageColors } from '@/lib/images/utils';
 import { Uploader } from '@/lib/aws/s3/uploader';
 
 /** types */

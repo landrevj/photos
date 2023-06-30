@@ -3,7 +3,6 @@
 import { useState } from 'react';
 
 /** external components */
-import NextImage from 'next/image';
 
 /** components */
 import Button from '@/components/common/Button/Button';
@@ -15,7 +14,7 @@ import UploadForm from './UploadForm/UploadForm';
 import { useGetAllImagesQuery } from '@/lib/redux/state/api';
 
 /** helpers */
-import { createImageColorDataUrl } from '@/lib/image';
+import ImageGallery from '../common/ImageGallery/ImageGallery';
 
 /** types */
 
@@ -47,37 +46,7 @@ export const Gallery = () => {
           />
         </Dialog>
       </Card>
-      <section className='grid gap-4 py-8 sm:grid-cols-3 lg:grid-cols-5'>
-        {isSuccess &&
-          data.map((image) => (
-            <div key={image.awsFilename} style={{ maxWidth: '300px' }}>
-              <NextImage
-                src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/images/${image.awsFilename}`}
-                alt='image'
-                width={image.width}
-                height={image.height}
-                blurDataURL={createImageColorDataUrl(image.colors.dominant)}
-                placeholder='blur'
-              />
-              <div className='flex flex-row'>
-                <div
-                  style={{
-                    width: '50%',
-                    height: '30px',
-                    background: image.colors.dominant,
-                  }}
-                />
-                <div
-                  style={{
-                    width: '50%',
-                    height: '30px',
-                    background: image.colors.complement,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
-      </section>
+      {isSuccess && <ImageGallery images={data} />}
     </div>
   );
 };

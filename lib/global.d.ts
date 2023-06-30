@@ -10,11 +10,3 @@ declare class ColorThief {
 declare module 'colorthief' {
   export = ColorThief;
 }
-
-declare global {
-  namespace IJS {
-    declare class Image {
-      meta: Record<any, any>;
-    }
-  }
-}

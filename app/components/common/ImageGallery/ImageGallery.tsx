@@ -17,18 +17,25 @@ import { useGalleryLayout } from '@/lib/images/useGalleryLayout';
 interface ImageGalleryProps {
   images: Image[];
   gap?: number;
+  className?: string;
 }
 
-export const ImageGallery = ({ images, gap = 8 }: ImageGalleryProps) => {
+export const ImageGallery = ({
+  className,
+  images,
+  gap = 8,
+}: ImageGalleryProps) => {
   const { imageStyles, lastRowWidthRemainder } = useGalleryLayout(images);
 
   if (!imageStyles || !lastRowWidthRemainder) return null;
 
   return (
     <div
+      className={className}
       style={{
         display: 'flex',
         flexWrap: 'wrap',
+        margin: `-${gap / 2}px`,
       }}
     >
       {images.map((image, index) => (

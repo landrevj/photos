@@ -17,26 +17,30 @@ export const Navbar = ({ activeRoute }: NavbarProps) => {
   return (
     <nav className='flex h-[12.5vh] items-center'>
       <Button
-        color={activeRoute === '/' ? 'secondary' : 'transparent'}
+        color='transparent'
         href='/'
+        className={activeRoute === '/' ? 'text-blue-500' : ''}
       >
         /
       </Button>
       <Button
-        color={activeRoute === '/gallery' ? 'secondary' : 'transparent'}
+        color='transparent'
         href='/gallery'
+        className={activeRoute === '/gallery' ? 'text-blue-500' : ''}
       >
         gallery
       </Button>
       <Button
-        color={activeRoute === '/blog' ? 'secondary' : 'transparent'}
+        color='transparent'
         href=''
+        className={activeRoute === '/blog' ? 'text-blue-500' : ''}
       >
         blog
       </Button>
       <Button
-        color={activeRoute === '/about' ? 'secondary' : 'transparent'}
+        color='transparent'
         href=''
+        className={activeRoute === '/about' ? 'text-blue-500' : ''}
       >
         about
       </Button>

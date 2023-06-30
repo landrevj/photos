@@ -23,8 +23,9 @@ export const Gallery = () => {
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   return (
-    <div>
-      <Card className='flex items-center'>
+    <div className='flex flex-col gap-8'>
+      {/* <Card className='flex items-center bg-gray-100'> */}
+      <div className='flex items-center'>
         <span>no sort</span>
         <div className='flex-1' />
         <Button color='primary' onClick={() => setIsUploadDialogOpen(true)}>
@@ -45,7 +46,9 @@ export const Gallery = () => {
             }}
           />
         </Dialog>
-      </Card>
+      </div>
+      {/* </Card> */}
+      <hr />
       {isSuccess && <ImageGallery images={data} />}
     </div>
   );

@@ -34,7 +34,7 @@ export const Hero = ({ children }: HeroProps) => {
     >
       <NextImage
         className='-z-10 object-cover'
-        src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/images/${data.awsFilename}`}
+        src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/images/${data?.awsFilename}`}
         alt='hero'
         fill
         blurDataURL={createImageColorDataUrl(

@@ -1,12 +1,21 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { Image } from '@/api/images/images.types';
+import type {
+  Image,
+  ImageQueryGroup,
+  ImageQueryParams,
+} from '@/api/images/images.types';
 
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
   endpoints: (builder) => ({
-    getAllImages: builder.query<Image[], void>({
-      query: () => 'images',
+    getImages: builder.query<ImageQueryGroup[], ImageQueryParams | void>({
+      query: (params) => {
+        if (!params) return 'images';
+
+        const search = new URLSearchParams(params).toString();
+        return `images?${search}`;
+      },
     }),
     getRandomHeroImage: builder.query<Image, void>({
       query: () => 'images/random',
@@ -16,4 +25,4 @@ export const api = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetAllImagesQuery, useGetRandomHeroImageQuery } = api;
+export const { useGetImagesQuery, useGetRandomHeroImageQuery } = api;

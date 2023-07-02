@@ -12,11 +12,51 @@ export const parseExifDateTimeOriginal = (str?: string) => {
   return new Date(`${parts[0].replaceAll(':', '-')} ${parts[1]}`);
 };
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
   const client = await clientPromise;
-  const cursor = client.db(DB_NAME).collection('images').find();
-  const images = await cursor.toArray();
-  return NextResponse.json(images);
+
+  const groupBy = req.nextUrl.searchParams.get('groupBy') || 'none';
+  const order = req.nextUrl.searchParams.get('order') || 'desc';
+
+  const groupByMap: Record<string, string> = {
+    day: '%Y-%m-%d',
+    month: '%Y-%m',
+    year: '%Y',
+    none: '',
+  };
+  const orderMap: Record<string, number> = {
+    desc: -1,
+    asc: 1,
+  };
+
+  const cursor = client
+    .db(DB_NAME)
+    .collection('images')
+    .aggregate([
+      {
+        $sort: {
+          takenAt: orderMap[order],
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $dateToString: {
+              format: groupByMap[groupBy] ?? '',
+              date: '$takenAt',
+            },
+          },
+          images: { $push: '$$ROOT' },
+        },
+      },
+      {
+        $sort: {
+          _id: orderMap[order],
+        },
+      },
+    ]);
+  const imageGroups = await cursor.toArray();
+  return NextResponse.json(imageGroups);
 };
 
 export const PUT = async (req: NextRequest) => {

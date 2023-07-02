@@ -65,3 +65,14 @@ export interface Image {
    */
   updatedAt: Date;
 }
+
+export interface ImageQueryParams {
+  groupBy: 'day' | 'month' | 'year';
+  order: 'asc' | 'desc';
+  [key: string]: string;
+}
+
+export type ImageQueryGroup = {
+  _id: string;
+  images: Image[];
+};

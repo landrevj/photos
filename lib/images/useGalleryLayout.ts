@@ -49,7 +49,7 @@ const getStartingValues = (): {
 // @see https://github.com/fmkra/next-gallery/blob/development/src/Gallery.tsx
 export const useGalleryLayout = (
   images: Image[],
-  spanLastRowThreshold = 75
+  spanLastRowThreshold = 100
 ) => {
   const breakpoints = useMemo(() => {
     return getStartingValues().map((breakpoint) => {

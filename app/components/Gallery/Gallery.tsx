@@ -6,27 +6,32 @@ import { useState } from 'react';
 
 /** components */
 import Button from '@/components/common/Button/Button';
-import Card from '@/components/common/Card/Card';
 import Dialog from '@/components/common/Dialog/Dialog';
+import GroupHeading from './GroupHeading/GroupHeading';
+import QueryForm from './QueryForm/QueryForm';
 import UploadForm from './UploadForm/UploadForm';
 
 /** state */
-import { useGetAllImagesQuery } from '@/lib/redux/state/api';
+import { useGetImagesQuery } from '@/lib/redux/state/api';
 
 /** helpers */
 import ImageGallery from '../common/ImageGallery/ImageGallery';
 
 /** types */
+import type { ImageQueryParams } from '@/app/api/images/images.types';
 
 export const Gallery = () => {
-  const { data, isSuccess, refetch } = useGetAllImagesQuery();
+  const [query, setQuery] = useState<ImageQueryParams>({
+    groupBy: 'month',
+    order: 'desc',
+  });
+  const { data, isSuccess, isFetching, refetch } = useGetImagesQuery(query);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   return (
-    <div className='flex flex-col gap-8'>
-      {/* <Card className='flex items-center bg-gray-100'> */}
-      <div className='flex items-center'>
-        <span>no sort</span>
+    <div className='flex flex-col gap-8 pb-16'>
+      <div className='flex flex-wrap items-center'>
+        <QueryForm formValues={query} setQuery={setQuery} />
         <div className='flex-1' />
         <Button color='primary' onClick={() => setIsUploadDialogOpen(true)}>
           upload
@@ -47,9 +52,15 @@ export const Gallery = () => {
           />
         </Dialog>
       </div>
-      {/* </Card> */}
       <hr />
-      {isSuccess && <ImageGallery images={data} />}
+      {!isFetching &&
+        isSuccess &&
+        data.map((group) => (
+          <div key={group._id}>
+            <GroupHeading date={group._id} groupBy={query.groupBy} />
+            <ImageGallery images={group.images} />
+          </div>
+        ))}
     </div>
   );
 };

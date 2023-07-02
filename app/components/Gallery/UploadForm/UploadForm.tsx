@@ -62,7 +62,9 @@ export const UploadForm = ({ onSuccess }: UploadFormProps) => {
               size: img.size,
               histogram: img.getHistograms(),
               meta: {
+                // @ts-ignore
                 exif: img.meta?.exif?.map,
+                // @ts-ignore
                 tiff: img.meta?.tiff?.tags,
               },
               colors: await getImageColors(img),

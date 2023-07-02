@@ -12,6 +12,7 @@
   "rules": {
     "arrow-body-style": "off",
     "implicit-arrow-linebreak": "off",
+    "no-underscore-dangle": "off",
     "sort-imports": [
       "error",
       { "allowSeparatedGroups": true, "ignoreCase": true }

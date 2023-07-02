@@ -7,15 +7,15 @@ import { useState } from 'react';
 /** components */
 // import Button from '@/components/common/Button/Button';
 // import Dialog from '@/components/common/Dialog/Dialog';
-// import GroupHeading from './GroupHeading/GroupHeading';
+import GroupHeading from './GroupHeading/GroupHeading';
 import QueryForm from './QueryForm/QueryForm';
 // import UploadForm from './UploadForm/UploadForm';
 
 /** state */
-// import { useGetImagesQuery } from '@/lib/redux/state/api';
+import { useGetImagesQuery } from '@/lib/redux/state/api';
 
 /** helpers */
-// import ImageGallery from '../common/ImageGallery/ImageGallery';
+import ImageGallery from '../common/ImageGallery/ImageGallery';
 
 /** types */
 import type { ImageQueryParams } from '@/types/images';
@@ -25,7 +25,12 @@ export const Gallery = () => {
     groupBy: 'month',
     order: 'desc',
   });
-  // const { data, isSuccess, isFetching, refetch } = useGetImagesQuery(query);
+  const {
+    data,
+    isSuccess,
+    isFetching,
+    //  refetch
+  } = useGetImagesQuery(query);
   // const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   return (
@@ -53,14 +58,14 @@ export const Gallery = () => {
         </Dialog> */}
       </div>
       <hr />
-      {/* {!isFetching &&
+      {!isFetching &&
         isSuccess &&
         data.map((group) => (
           <div key={group._id}>
             <GroupHeading date={group._id} groupBy={query.groupBy} />
             <ImageGallery images={group.images} />
           </div>
-        ))} */}
+        ))}
     </div>
   );
 };

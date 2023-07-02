@@ -10,5 +10,5 @@ export const GET = async () => {
     .collection('images')
     .aggregate([{ $sample: { size: 1 } }]);
   const images = await cursor.toArray();
-  return NextResponse.json(images[0]);
+  return NextResponse.json(images[0] || null);
 };

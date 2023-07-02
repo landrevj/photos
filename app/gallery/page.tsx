@@ -1,8 +1,8 @@
 /** external components */
 
 /** components */
-import Gallery from '@/components/Gallery/Gallery';
-import Navbar from '@/components/Navbar/Navbar';
+// import Gallery from '@/components/Gallery/Gallery';
+// import Navbar from '@/components/Navbar/Navbar';
 
 /** state */
 
@@ -13,8 +13,8 @@ import Navbar from '@/components/Navbar/Navbar';
 export const GalleryPage = () => {
   return (
     <main className='container mx-auto px-8'>
-      <Navbar activeRoute='/gallery' />
-      <Gallery />
+      {/* <Navbar activeRoute='/gallery' />
+      <Gallery /> */}
     </main>
   );
 };

@@ -5,8 +5,8 @@ import { useState } from 'react';
 /** external components */
 
 /** components */
-// import Button from '@/components/common/Button/Button';
-// import Dialog from '@/components/common/Dialog/Dialog';
+import Button from '@/components/common/Button/Button';
+import Dialog from '@/components/common/Dialog/Dialog';
 import GroupHeading from './GroupHeading/GroupHeading';
 import QueryForm from './QueryForm/QueryForm';
 // import UploadForm from './UploadForm/UploadForm';
@@ -31,17 +31,17 @@ export const Gallery = () => {
     isFetching,
     //  refetch
   } = useGetImagesQuery(query);
-  // const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   return (
     <div className='flex flex-col gap-8 pb-16'>
       <div className='flex flex-wrap items-center'>
         <QueryForm formValues={query} setQuery={setQuery} />
         <div className='flex-1' />
-        {/* <Button color='primary' onClick={() => setIsUploadDialogOpen(true)}>
+        <Button color='primary' onClick={() => setIsUploadDialogOpen(true)}>
           upload
-        </Button> */}
-        {/* <Dialog
+        </Button>
+        <Dialog
           title='upload images'
           description='drag and drop images here to upload them'
           isOpen={isUploadDialogOpen}
@@ -49,13 +49,13 @@ export const Gallery = () => {
             setIsUploadDialogOpen(false);
           }}
         >
-          <UploadForm
+          {/* <UploadForm
             onSuccess={() => {
               setIsUploadDialogOpen(false);
               refetch();
             }}
-          />
-        </Dialog> */}
+          /> */}
+        </Dialog>
       </div>
       <hr />
       {!isFetching &&

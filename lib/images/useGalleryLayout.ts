@@ -1,4 +1,4 @@
-import { Image } from '@/app/api/images/images.types';
+import type { Image } from '@/types/images';
 import { useMemo } from 'react';
 import { useWindowWidth } from '../hooks/useWindowWidth';
 

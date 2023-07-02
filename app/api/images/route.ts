@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import clientPromise from '@/lib/mongodb';
-import { Image } from './images.types';
+import type { Image } from '@/types/images';
 
 const DB_NAME = process.env.MONGODB_DB_NAME ?? '';
 

@@ -10,7 +10,7 @@ import Select from '@/components/common/Select/Select';
 
 /** types */
 import type { Dispatch, SetStateAction } from 'react';
-import type { ImageQueryParams } from '@/app/api/images/images.types';
+import type { ImageQueryParams } from '@/types/images';
 
 interface QueryFormProps {
   formValues: ImageQueryParams;

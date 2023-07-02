@@ -18,7 +18,7 @@ import { useGetImagesQuery } from '@/lib/redux/state/api';
 import ImageGallery from '../common/ImageGallery/ImageGallery';
 
 /** types */
-import type { ImageQueryParams } from '@/app/api/images/images.types';
+import type { ImageQueryParams } from '@/types/images';
 
 export const Gallery = () => {
   const [query, setQuery] = useState<ImageQueryParams>({

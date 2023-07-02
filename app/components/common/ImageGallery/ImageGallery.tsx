@@ -11,7 +11,7 @@ import NextImage from 'next/image';
 import { createImageColorDataUrl } from '@/lib/images/utils';
 
 /** types */
-import type { Image } from '@/app/api/images/images.types';
+import type { Image } from '@/types/images';
 import { useGalleryLayout } from '@/lib/images/useGalleryLayout';
 
 interface ImageGalleryProps {

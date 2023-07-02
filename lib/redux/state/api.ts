@@ -1,9 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type {
-  Image,
-  ImageQueryGroup,
-  ImageQueryParams,
-} from '@/api/images/images.types';
+import type { Image, ImageQueryGroup, ImageQueryParams } from '@/types/images';
 
 export const api = createApi({
   reducerPath: 'api',

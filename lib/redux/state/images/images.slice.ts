@@ -1,5 +1,5 @@
 import { createSlice } from '@/lib/redux';
-import { ImagesState } from './images.types';
+import type { ImagesState } from './images.types';
 
 const initialState: ImagesState = {
   test: '',

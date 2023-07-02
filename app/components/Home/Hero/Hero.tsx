@@ -29,7 +29,7 @@ export const Hero = ({ children }: HeroProps) => {
     <div
       className='relative flex h-full items-center justify-center'
       style={{
-        background: `linear-gradient(45deg, ${data.colors.dominant}33, ${data.colors.complement}66)`,
+        background: `linear-gradient(45deg, ${data?.colors?.dominant}33, ${data?.colors?.complement}66)`,
       }}
     >
       <NextImage

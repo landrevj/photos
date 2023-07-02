@@ -5,7 +5,7 @@ import { useState } from 'react';
 /** external components */
 
 /** components */
-import Button from '@/components/common/Button/Button';
+// import Button from '@/components/common/Button/Button';
 // import Dialog from '@/components/common/Dialog/Dialog';
 // import GroupHeading from './GroupHeading/GroupHeading';
 import QueryForm from './QueryForm/QueryForm';

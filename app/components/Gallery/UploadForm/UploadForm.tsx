@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ImageJs from 'image-js';
+// import ImageJs from 'image-js';
 
 /** external components */
 
@@ -10,15 +10,16 @@ import ImageJs from 'image-js';
 /** state */
 
 /** helpers */
-import { getImageColors } from '@/lib/images/utils';
+// import { getImageColors } from '@/lib/images/utils';
 import { Uploader } from '@/lib/aws/s3/uploader';
 
 /** types */
-interface UploadFormProps {
-  onSuccess: () => void;
-}
+// interface UploadFormProps {
+//   onSuccess: () => void;
+// }
 
-export const UploadForm = ({ onSuccess }: UploadFormProps) => {
+// export const UploadForm = ({onSuccess }: UploadFormProps) => {
+export const UploadForm = () => {
   const [file, setFile] = useState<File | undefined>(undefined);
   const [pgvalue, setPgvalue] = useState<number | undefined>(undefined);
   const [perf, setPerf] = useState<string | number | undefined>(undefined);
@@ -49,29 +50,29 @@ export const UploadForm = ({ onSuccess }: UploadFormProps) => {
             setPgvalue(percentage);
           }
         })
-        .onSuccess(async (image) => {
-          const img = await ImageJs.load(await image.file.arrayBuffer());
-          await fetch('/api/images', {
-            method: 'PUT',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({
-              awsFilename: image.awsFilename,
-              name: image.file.name,
-              width: img.width,
-              height: img.height,
-              size: img.size,
-              histogram: img.getHistograms(),
-              meta: {
-                // @ts-ignore
-                exif: img.meta?.exif?.map,
-                // @ts-ignore
-                tiff: img.meta?.tiff?.tags,
-              },
-              colors: await getImageColors(img),
-            }),
-          });
-          onSuccess();
-        })
+        // .onSuccess(async (image) => {
+        //   const img = await ImageJs.load(await image.file.arrayBuffer());
+        //   await fetch('/api/images', {
+        //     method: 'PUT',
+        //     headers: { 'content-type': 'application/json' },
+        //     body: JSON.stringify({
+        //       awsFilename: image.awsFilename,
+        //       name: image.file.name,
+        //       width: img.width,
+        //       height: img.height,
+        //       size: img.size,
+        //       histogram: img.getHistograms(),
+        //       meta: {
+        //         // @ts-ignore
+        //         exif: img.meta?.exif?.map,
+        //         // @ts-ignore
+        //         tiff: img.meta?.tiff?.tags,
+        //       },
+        //       colors: await getImageColors(img),
+        //     }),
+        //   });
+        //   onSuccess();
+        // })
         .onError((error) => {
           setFile(undefined);
           console.error(error);

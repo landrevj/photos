@@ -9,7 +9,7 @@ import Button from '@/components/common/Button/Button';
 import Dialog from '@/components/common/Dialog/Dialog';
 import GroupHeading from './GroupHeading/GroupHeading';
 import QueryForm from './QueryForm/QueryForm';
-// import UploadForm from './UploadForm/UploadForm';
+import UploadForm from './UploadForm/UploadForm';
 
 /** state */
 import { useGetImagesQuery } from '@/lib/redux/state/api';
@@ -29,7 +29,7 @@ export const Gallery = () => {
     data,
     isSuccess,
     isFetching,
-    //  refetch
+    // refetch
   } = useGetImagesQuery(query);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
@@ -49,12 +49,12 @@ export const Gallery = () => {
             setIsUploadDialogOpen(false);
           }}
         >
-          {/* <UploadForm
-            onSuccess={() => {
-              setIsUploadDialogOpen(false);
-              refetch();
-            }}
-          /> */}
+          <UploadForm
+          // onSuccess={() => {
+          //   setIsUploadDialogOpen(false);
+          //   refetch();
+          // }}
+          />
         </Dialog>
       </div>
       <hr />

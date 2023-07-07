@@ -25,12 +25,7 @@ export const Gallery = () => {
     groupBy: 'month',
     order: 'desc',
   });
-  const {
-    data,
-    isSuccess,
-    isFetching,
-    // refetch
-  } = useGetImagesQuery(query);
+  const { data, isSuccess, isFetching, refetch } = useGetImagesQuery(query);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
 
   return (
@@ -50,10 +45,10 @@ export const Gallery = () => {
           }}
         >
           <UploadForm
-          // onSuccess={() => {
-          //   setIsUploadDialogOpen(false);
-          //   refetch();
-          // }}
+            onSuccess={() => {
+              setIsUploadDialogOpen(false);
+              refetch();
+            }}
           />
         </Dialog>
       </div>

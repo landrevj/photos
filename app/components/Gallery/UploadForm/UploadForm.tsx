@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import ImageJs from 'image-js';
 
 /** external components */
 
@@ -10,29 +9,28 @@ import ImageJs from 'image-js';
 /** state */
 
 /** helpers */
-// import { getImageColors } from '@/lib/images/utils';
+import { getImageFileData } from '@/lib/images/utils';
 import { Uploader } from '@/lib/aws/s3/uploader';
 
 /** types */
-// interface UploadFormProps {
-//   onSuccess: () => void;
-// }
+interface UploadFormProps {
+  onSuccess: () => void;
+}
 
-// export const UploadForm = ({onSuccess }: UploadFormProps) => {
-export const UploadForm = () => {
-  const [file, setFile] = useState<File | undefined>(undefined);
+export const UploadForm = ({ onSuccess }: UploadFormProps) => {
+  const [selectedFile, setSelectedFile] = useState<File | undefined>(undefined);
   const [pgvalue, setPgvalue] = useState<number | undefined>(undefined);
   const [perf, setPerf] = useState<string | number | undefined>(undefined);
 
   useEffect(() => {
-    if (file) {
+    if (selectedFile) {
       let percentage: number;
 
       setPgvalue(0);
       setPerf('-');
 
       const uploader = new Uploader({
-        file,
+        file: selectedFile,
         chunkSize: Number(process.env.NEXT_PUBLIC_UPLOAD_PART_SIZE ?? 5),
         threadsQuantity: Number(process.env.NEXT_PUBLIC_UPLOAD_THREADS ?? 1),
         useTransferAcceleration: false,
@@ -50,38 +48,26 @@ export const UploadForm = () => {
             setPgvalue(percentage);
           }
         })
-        .onSuccess(async (image) => {
-          await ImageJs.load(await image.file.arrayBuffer());
-          // await fetch('/api/images', {
-          //   method: 'PUT',
-          //   headers: { 'content-type': 'application/json' },
-          //   body: JSON.stringify({
-          //     awsFilename: image.awsFilename,
-          //     name: image.file.name,
-          //     width: img.width,
-          //     height: img.height,
-          //     size: img.size,
-          //     histogram: img.getHistograms(),
-          //     meta: {
-          //       // @ts-ignore
-          //       exif: img.meta?.exif?.map,
-          //       // @ts-ignore
-          //       tiff: img.meta?.tiff?.tags,
-          //     },
-          //     colors: await getImageColors(img),
-          //   }),
-          // });
-          // onSuccess();
+        .onSuccess(async ({ awsFilename, file }) => {
+          await fetch('/api/images', {
+            method: 'PUT',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              awsFilename,
+              ...(await getImageFileData(file)),
+            }),
+          });
+          onSuccess();
         })
         .onError((error) => {
-          setFile(undefined);
+          setSelectedFile(undefined);
           console.error(error);
         });
 
       uploader.start();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [file]);
+  }, [selectedFile]);
 
   return (
     <div>
@@ -94,7 +80,7 @@ export const UploadForm = () => {
           type='file'
           id='fileinput'
           onChange={(e) => {
-            setFile(e.target?.files?.[0]);
+            setSelectedFile(e.target?.files?.[0]);
           }}
         />
       </div>

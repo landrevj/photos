@@ -30,18 +30,13 @@ export interface Image {
    */
   histogram: number[][];
   /**
-   * Image tag data
+   * Image exif data
    */
-  meta: {
-    /**
-     * Image exif data
-     */
-    exif?: Record<any, any>;
-    /**
-     * Image tiff data
-     */
-    tiff?: Record<any, any>;
-  };
+  exif: Record<any, any>;
+  /**
+   * Image exif data
+   */
+  gps: { latitude?: number; longitude?: number };
   colors: {
     /**
      * Hex string for the image's dominant color

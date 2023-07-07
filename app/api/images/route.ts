@@ -4,14 +4,6 @@ import type { Image } from '@/types/images';
 
 const DB_NAME = process.env.MONGODB_DB_NAME ?? '';
 
-export const parseExifDateTimeOriginal = (str?: string) => {
-  if (!str) {
-    return undefined;
-  }
-  const parts = str.split(' ');
-  return new Date(`${parts[0].replaceAll(':', '-')} ${parts[1]}`);
-};
-
 export const GET = async (req: NextRequest) => {
   const client = await clientPromise;
 
@@ -68,15 +60,11 @@ export const PUT = async (req: NextRequest) => {
     width: data.width,
     height: data.height,
     size: data.size,
-    histogram: data.histogram,
-    meta: {
-      exif: data.meta?.exif,
-      tiff: data.meta?.tiff,
-    },
+    // histogram: data.histogram,
+    exif: data.exif || {},
+    gps: data.gps || {},
     colors: data.colors,
-    takenAt: new Date(
-      parseExifDateTimeOriginal(data.meta?.exif?.DateTimeOriginal) ?? Date.now()
-    ),
+    takenAt: new Date(data.exif?.DateTimeOriginal ?? Date.now()),
     createdAt: new Date(),
     updatedAt: new Date(),
   };

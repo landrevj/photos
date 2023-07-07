@@ -13,7 +13,7 @@
       "@/api/*": ["app/api/*"],
       "@/types/*": ["types/*"],
       "@/lib/*": ["lib/*"],
-      "@/styles/*": ["styles/*"]
+      "@/styles/*": ["styles/*"],
     },
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,

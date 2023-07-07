@@ -12,8 +12,8 @@ export const GET = async () => {
   const images = await cursor.toArray();
   return NextResponse.json(images[0] || null, {
     headers: {
-      'Cache-Control': 'public, max-age=0, s-maxage=1',
-      'Vercel-CDN-Cache-Control': 'public, s-maxage=1',
+      'Cache-Control': 'no-store',
+      'Vercel-CDN-Cache-Control': 'no-store',
     },
   });
 };

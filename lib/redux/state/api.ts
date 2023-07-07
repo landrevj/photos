@@ -14,7 +14,7 @@ export const api = createApi({
       },
     }),
     getRandomHeroImage: builder.query<Image, void>({
-      query: () => 'images/random',
+      query: () => ({ url: 'images/random', cache: 'no-cache' }),
     }),
   }),
 });

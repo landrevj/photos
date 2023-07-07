@@ -13,7 +13,7 @@ export const GET = async () => {
   return NextResponse.json(images[0] || null, {
     headers: {
       'Cache-Control': 'no-store',
-      'Vercel-CDN-Cache-Control': 'no-store',
+      'CDN-Cache-Control': 'no-store',
     },
   });
 };

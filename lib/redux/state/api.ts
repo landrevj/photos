@@ -5,12 +5,20 @@ export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({ baseUrl: '/api/' }),
   endpoints: (builder) => ({
+    getImage: builder.query<Image, string>({
+      query: (id) => {
+        return `images/${id}`;
+      },
+    }),
     getImages: builder.query<ImageQueryGroup[], ImageQueryParams | void>({
       query: (params) => {
-        if (!params) return 'images';
+        const trimmedParams = Object.fromEntries(
+          Object.entries(params || {}).filter(([_, value]) => value != null)
+        );
 
-        const search = new URLSearchParams(params).toString();
-        return `images?${search}`;
+        if (!params || !Object.keys(trimmedParams).length) return 'images';
+
+        return `images?${new URLSearchParams(trimmedParams)}`;
       },
     }),
     getRandomHeroImage: builder.query<Image, void>({
@@ -21,4 +29,8 @@ export const api = createApi({
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useGetImagesQuery, useGetRandomHeroImageQuery } = api;
+export const {
+  useGetImageQuery,
+  useGetImagesQuery,
+  useGetRandomHeroImageQuery,
+} = api;

@@ -2,7 +2,7 @@
 /* eslint-disable no-var */
 /* eslint-disable vars-on-top */
 /* eslint-disable no-underscore-dangle */
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId as MongoObjectId } from 'mongodb';
 
 const uri = process.env.MONGODB_URI ?? ''; // your mongodb connection string
 const options = {};
@@ -36,6 +36,8 @@ class Singleton {
   }
 }
 const clientPromise = Singleton.instance;
+
+export const ObjectId = MongoObjectId;
 
 // Export a module-scoped MongoClient promise. By doing this in a
 // separate module, the client can be shared across functions.

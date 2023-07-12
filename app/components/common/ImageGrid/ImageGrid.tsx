@@ -1,6 +1,9 @@
 'use client';
 
+import { useSearchParams } from 'next/navigation';
+
 /** external components */
+import Link from 'next/link';
 import NextImage from 'next/image';
 
 /** components */
@@ -14,17 +17,14 @@ import { createImageColorDataUrl } from '@/lib/images/utils';
 import type { Image } from '@/types/images';
 import { useGalleryLayout } from '@/lib/images/useGalleryLayout';
 
-interface ImageGalleryProps {
+interface ImageGridProps {
   images: Image[];
   gap?: number;
   className?: string;
 }
 
-export const ImageGallery = ({
-  className,
-  images,
-  gap = 8,
-}: ImageGalleryProps) => {
+export const ImageGrid = ({ className, images, gap = 8 }: ImageGridProps) => {
+  const searchParams = useSearchParams();
   const { imageStyles, lastRowWidthRemainder } = useGalleryLayout(images);
 
   if (!imageStyles || !lastRowWidthRemainder) return null;
@@ -39,10 +39,11 @@ export const ImageGallery = ({
       }}
     >
       {images.map((image, index) => (
-        <div
+        <Link
           key={image.awsFilename}
           className='border-box relative flex-shrink-0 flex-grow'
           style={imageStyles[index]}
+          href={`/image/${image._id}?${searchParams.toString()}`}
         >
           <div
             className='absolute'
@@ -62,7 +63,7 @@ export const ImageGallery = ({
               className='overflow-hidden rounded-xl drop-shadow'
             />
           </div>
-        </div>
+        </Link>
       ))}
       <div
         className='flex-shrink-0 flex-grow'
@@ -74,4 +75,4 @@ export const ImageGallery = ({
   );
 };
 
-export default ImageGallery;
+export default ImageGrid;

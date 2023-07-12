@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
 
 /** external components */
 
@@ -15,23 +16,37 @@ import UploadForm from './UploadForm/UploadForm';
 import { useGetImagesQuery } from '@/lib/redux/state/api';
 
 /** helpers */
-import ImageGallery from '../common/ImageGallery/ImageGallery';
+import ImageGrid from '../common/ImageGrid/ImageGrid';
 
 /** types */
 import type { ImageQueryParams } from '@/types/images';
 
 export const Gallery = () => {
-  const [query, setQuery] = useState<ImageQueryParams>({
-    groupBy: 'month',
-    order: 'desc',
-  });
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const hasSearch = !!Array.from(searchParams.keys()).length;
+  const query: ImageQueryParams = useMemo(
+    () => ({
+      groupBy:
+        (searchParams.get('groupBy') as ImageQueryParams['groupBy']) || 'month',
+      order: (searchParams.get('order') as ImageQueryParams['order']) || 'desc',
+    }),
+    [searchParams]
+  );
   const { data, isSuccess, isFetching, refetch } = useGetImagesQuery(query);
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
+
+  useEffect(() => {
+    if (!hasSearch) {
+      router.replace(`${pathname}?${new URLSearchParams(query)}`);
+    }
+  }, [hasSearch, pathname, query, router]);
 
   return (
     <div className='flex flex-col gap-8 pb-16'>
       <div className='flex flex-wrap items-center'>
-        <QueryForm formValues={query} setQuery={setQuery} />
+        <QueryForm formValues={query} />
         <div className='flex-1' />
         <Button color='primary' onClick={() => setIsUploadDialogOpen(true)}>
           upload
@@ -58,7 +73,7 @@ export const Gallery = () => {
         data.map((group) => (
           <div key={group._id}>
             <GroupHeading date={group._id} groupBy={query.groupBy} />
-            <ImageGallery images={group.images} />
+            <ImageGrid images={group.images} />
           </div>
         ))}
     </div>

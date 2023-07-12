@@ -54,7 +54,7 @@ export const GET = async (req: NextRequest) => {
 export const PUT = async (req: NextRequest) => {
   const data = await req.json();
   const client = await clientPromise;
-  const image: Partial<Image> = {
+  const image: Partial<Omit<Image, '_id'>> = {
     awsFilename: data.awsFilename,
     name: data.name,
     width: data.width,

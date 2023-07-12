@@ -1,10 +1,8 @@
-import { ObjectId } from 'mongodb';
-
 export interface Image {
   /**
    * Mongodb id
    */
-  _id: ObjectId;
+  _id: string;
   /**
    * The aws file key for the image
    */

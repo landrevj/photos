@@ -26,7 +26,18 @@ export interface Image {
   /**
    * RGB Histogram data
    */
-  histogram: number[][];
+  histogram: {
+    yMax: number;
+    channels: {
+      red: { max: number; data: number[] };
+      green: { max: number; data: number[] };
+      blue: { max: number; data: number[] };
+      rgOverlap: { max: number; data: number[] };
+      gbOverlap: { max: number; data: number[] };
+      rbOverlap: { max: number; data: number[] };
+      rgbOverlap: { max: number; data: number[] };
+    };
+  };
   /**
    * Image exif data
    */

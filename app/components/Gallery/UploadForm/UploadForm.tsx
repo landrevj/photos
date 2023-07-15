@@ -49,12 +49,13 @@ export const UploadForm = ({ onSuccess }: UploadFormProps) => {
           }
         })
         .onSuccess(async ({ awsFilename, file }) => {
+          const data = await getImageFileData(file);
           await fetch('/api/images', {
             method: 'PUT',
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
               awsFilename,
-              ...(await getImageFileData(file)),
+              ...data,
             }),
           });
           onSuccess();

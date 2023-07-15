@@ -60,7 +60,7 @@ export const PUT = async (req: NextRequest) => {
     width: data.width,
     height: data.height,
     size: data.size,
-    // histogram: data.histogram,
+    histogram: data.histogram,
     exif: data.exif || {},
     gps: data.gps || {},
     colors: data.colors,

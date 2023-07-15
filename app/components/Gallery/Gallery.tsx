@@ -9,6 +9,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Button from '@/components/common/Button/Button';
 import Dialog from '@/components/common/Dialog/Dialog';
 import GroupHeading from './GroupHeading/GroupHeading';
+import ImageGrid from '@/components/common/ImageGrid/ImageGrid';
 import QueryForm from './QueryForm/QueryForm';
 import UploadForm from './UploadForm/UploadForm';
 
@@ -16,7 +17,7 @@ import UploadForm from './UploadForm/UploadForm';
 import { useGetImagesQuery } from '@/lib/redux/state/api';
 
 /** helpers */
-import ImageGrid from '../common/ImageGrid/ImageGrid';
+import { replace } from '@/lib/history/replace';
 
 /** types */
 import type { ImageQueryParams } from '@/types/images';
@@ -39,7 +40,7 @@ export const Gallery = () => {
 
   useEffect(() => {
     if (!hasSearch) {
-      router.replace(`${pathname}?${new URLSearchParams(query)}`);
+      replace(`${pathname}?${new URLSearchParams(query)}`);
     }
   }, [hasSearch, pathname, query, router]);
 

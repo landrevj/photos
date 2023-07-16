@@ -22,7 +22,7 @@ export const Spinner = ({
   containerClassName,
 }: SpinnerProps) => {
   return (
-    <div className={containerClassName}>
+    <div className={twMerge('pointer-events-none', containerClassName)}>
       <div
         className={twMerge(
           clsx(

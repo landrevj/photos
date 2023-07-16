@@ -184,11 +184,11 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                       }}
                     />
                   </TransformComponent>
-                  <Spinner
-                    isLoading={isImageHidden}
-                    containerClassName='absolute inset-0 flex h-full w-full items-center justify-center'
-                  />
                 </div>
+                <Spinner
+                  isLoading={isImageHidden}
+                  containerClassName='absolute top-0 flex h-full w-full items-center justify-center'
+                />
                 <Navigation
                   position={position}
                   images={images}

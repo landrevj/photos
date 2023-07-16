@@ -17,7 +17,6 @@ import UploadForm from './UploadForm/UploadForm';
 import { useGetImagesQuery } from '@/lib/redux/state/api';
 
 /** helpers */
-import { replace } from '@/lib/history/replace';
 
 /** types */
 import type { ImageQueryParams } from '@/types/images';
@@ -40,10 +39,11 @@ export const Gallery = () => {
 
   useEffect(() => {
     if (!hasSearch) {
-      replace(`${pathname}?${new URLSearchParams(query)}`);
+      router.replace(`${pathname}?${new URLSearchParams(query)}`);
     }
   }, [hasSearch, pathname, query, router]);
 
+  console.log(hasSearch);
   return (
     <div className='flex flex-col gap-8 pb-16'>
       <div className='flex flex-wrap items-center'>

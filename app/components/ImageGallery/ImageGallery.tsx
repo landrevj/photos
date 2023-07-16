@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 
 /** external components */
@@ -8,6 +9,7 @@ import NextImage from 'next/image';
 /** components */
 import ImageMetadata from './ImageMetadata/ImageMetadata';
 import Navigation from './Navigation/Navigation';
+import Spinner from '@/components/common/Spinner/Spinner';
 
 /** state */
 
@@ -38,6 +40,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
   );
   const image = images[position];
   const bgColor = image.colors.dominant || '#000';
+  const [isImageHidden, setIsImageHidden] = useState(true);
 
   const container = useRef<HTMLDivElement | null>(null);
 
@@ -168,6 +171,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                     <NextImage
                       src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/images/${image.awsFilename}`}
                       alt='image'
+                      className={clsx(isImageHidden && 'invisible')}
                       width={image.width}
                       height={image.height}
                       unoptimized
@@ -176,9 +180,14 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                         setImageClientHeight(img.clientHeight);
                         utils.resetTransform();
                         setIsInitialZoom(true);
+                        setIsImageHidden(false);
                       }}
                     />
                   </TransformComponent>
+                  <Spinner
+                    isLoading={isImageHidden}
+                    containerClassName='absolute inset-0 flex h-full w-full items-center justify-center'
+                  />
                 </div>
                 <Navigation
                   position={position}
@@ -201,6 +210,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                     setIsInitialZoom(true);
                   }}
                   onNavForward={() => {
+                    setIsImageHidden(true);
                     setPosition((prev) => prev - 1);
                     replace(
                       `/image/${images[position - 1]._id}?${searchParams}`
@@ -209,6 +219,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                     setIsInitialZoom(true);
                   }}
                   onNavBackward={() => {
+                    setIsImageHidden(true);
                     setPosition((prev) => prev + 1);
                     replace(
                       `/image/${images[position + 1]._id}?${searchParams}`

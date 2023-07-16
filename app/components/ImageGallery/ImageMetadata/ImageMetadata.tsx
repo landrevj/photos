@@ -22,7 +22,7 @@ interface ImageMetadataProps {
 
 export const ImageMetadata = ({ image }: ImageMetadataProps) => {
   const isLight = tinycolor(image.colors.dominant).isLight();
-  console.log(image.exif);
+  // console.log(image.exif);
   return (
     <div
       className={clsx(

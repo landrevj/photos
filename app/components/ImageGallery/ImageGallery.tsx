@@ -177,7 +177,12 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                 <Navigation
                   position={position}
                   images={images}
-                  zoomUtils={utils}
+                  onZoomIn={() => utils.zoomIn()}
+                  onZoomOut={() => utils.zoomOut()}
+                  onZoomReset={() => {
+                    utils.resetTransform();
+                    setIsInitialState(true);
+                  }}
                   onNavForward={() => {
                     setPosition((prev) => prev - 1);
                     replace(

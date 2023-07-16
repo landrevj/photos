@@ -23,14 +23,15 @@ import Button from '../../common/Button/Button';
 
 /** types */
 import type { Image } from '@/types/images';
-import type { ReactZoomPanPinchContentRef } from 'react-zoom-pan-pinch';
 
 interface NavigationProps {
   position: number;
   images: Image[];
   onNavBackward: () => void;
   onNavForward: () => void;
-  zoomUtils: ReactZoomPanPinchContentRef;
+  onZoomIn: () => void;
+  onZoomOut: () => void;
+  onZoomReset: () => void;
 }
 
 export const Navigation = ({
@@ -38,7 +39,9 @@ export const Navigation = ({
   images,
   onNavBackward,
   onNavForward,
-  zoomUtils,
+  onZoomIn,
+  onZoomOut,
+  onZoomReset,
 }: NavigationProps) => {
   const router = useRouter();
 
@@ -79,19 +82,19 @@ export const Navigation = ({
           <Button
             className='pointer-events-auto rounded-full px-1'
             color='transparent'
-            onClick={() => zoomUtils.resetTransform()}
+            onClick={onZoomReset}
             icon={<MdRestartAlt className='text-2xl' />}
           />
           <Button
             className='pointer-events-auto rounded-full px-1'
             color='transparent'
-            onClick={() => zoomUtils.zoomOut()}
+            onClick={onZoomIn}
             icon={<MdZoomOut className='text-2xl' />}
           />
           <Button
             className='pointer-events-auto rounded-full px-1'
             color='transparent'
-            onClick={() => zoomUtils.zoomIn()}
+            onClick={onZoomOut}
             icon={<MdZoomIn className='text-2xl' />}
           />
         </div>

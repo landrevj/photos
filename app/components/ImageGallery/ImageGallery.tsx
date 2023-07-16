@@ -211,18 +211,18 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                   }}
                   onNavForward={() => {
                     setIsImageHidden(true);
-                    setPosition((prev) => prev - 1);
+                    setPosition((prev) => prev + 1);
                     replace(
-                      `/image/${images[position - 1]._id}?${searchParams}`
+                      `/image/${images[position + 1]._id}?${searchParams}`
                     );
                     utils.resetTransform();
                     setIsInitialZoom(true);
                   }}
                   onNavBackward={() => {
                     setIsImageHidden(true);
-                    setPosition((prev) => prev + 1);
+                    setPosition((prev) => prev - 1);
                     replace(
-                      `/image/${images[position + 1]._id}?${searchParams}`
+                      `/image/${images[position - 1]._id}?${searchParams}`
                     );
                     utils.resetTransform();
                     setIsInitialZoom(true);

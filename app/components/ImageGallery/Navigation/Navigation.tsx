@@ -49,7 +49,7 @@ export const Navigation = ({
     'left',
     () => {
       if (position > 0) {
-        onNavForward();
+        onNavBackward();
       }
     },
     [position]
@@ -58,7 +58,7 @@ export const Navigation = ({
     'right',
     () => {
       if (position < images.length - 1) {
-        onNavBackward();
+        onNavForward();
       }
     },
     [position]

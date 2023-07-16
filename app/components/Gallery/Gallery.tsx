@@ -43,7 +43,6 @@ export const Gallery = () => {
     }
   }, [hasSearch, pathname, query, router]);
 
-  console.log(hasSearch);
   return (
     <div className='flex flex-col gap-8 pb-16'>
       <div className='flex flex-wrap items-center'>

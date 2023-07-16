@@ -61,6 +61,7 @@ export const ImageGrid = ({ className, images, gap = 8 }: ImageGridProps) => {
               blurDataURL={createImageColorDataUrl(image.colors.dominant)}
               placeholder='blur'
               className='overflow-hidden rounded-xl drop-shadow'
+              sizes='(min-width: 1536px) 20vw, (min-width: 1280px) 20vw, (min-width: 1024px) 30vw, (min-width: 768px) 50vw, 100vw'
             />
           </div>
         </Link>

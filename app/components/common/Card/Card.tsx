@@ -9,15 +9,19 @@ import Paper from '../Paper/Paper';
 /** helpers */
 
 /** types */
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 
-interface CardProps {
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
   className?: string;
 }
 
-export const Card = ({ children, className }: CardProps) => {
-  return <Paper className={twMerge('p-4', className)}>{children}</Paper>;
+export const Card = ({ children, className, ...divProps }: CardProps) => {
+  return (
+    <Paper className={twMerge('p-4', className)} {...divProps}>
+      {children}
+    </Paper>
+  );
 };
 
 export default Card;

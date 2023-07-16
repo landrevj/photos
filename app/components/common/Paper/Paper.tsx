@@ -10,9 +10,9 @@ import { twMerge } from 'tailwind-merge';
 /** helpers */
 
 /** types */
-import type { ReactNode } from 'react';
+import type { HTMLAttributes, ReactNode } from 'react';
 
-interface PaperProps {
+interface PaperProps extends HTMLAttributes<HTMLDivElement> {
   elevation?: number;
   children: ReactNode;
   className?: string;
@@ -27,13 +27,19 @@ const elevationShadowMap: Record<number, string> = {
   5: 'drop-shadow-2xl',
 };
 
-export const Paper = ({ children, className, elevation = 1 }: PaperProps) => {
+export const Paper = ({
+  children,
+  className,
+  elevation = 1,
+  ...divProps
+}: PaperProps) => {
   return (
     <div
       className={twMerge(
         clsx('rounded-xl bg-white', elevationShadowMap[elevation]),
         className
       )}
+      {...divProps}
     >
       {children}
     </div>

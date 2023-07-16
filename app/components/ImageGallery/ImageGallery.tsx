@@ -142,8 +142,6 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
     };
   }, [handleResize]);
 
-  console.log('scale', imageScale);
-
   return (
     <div
       className='h-screen w-full bg-neutral-950 transition-colors'
@@ -223,7 +221,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
             )}
           </TransformWrapper>
           <section
-            className='z-10 my-6 mr-8 w-72 flex-none rounded-xl py-1 drop-shadow-md transition-colors'
+            className='relative z-10 my-6 mr-8 flex w-72 flex-none flex-col overflow-hidden rounded-xl py-1 drop-shadow-md transition-colors'
             style={{ backgroundColor: `${bgColor}ee` }}
           >
             {image && <ImageMetadata image={image} />}

@@ -2,10 +2,12 @@ import clsx from 'clsx';
 import tinycolor from 'tinycolor2';
 
 /** external components */
+import { Map, Marker } from 'pigeon-maps';
+import { MdCamera, MdPhotoCamera } from '@/lib/icons';
 import { ParentSize } from '@visx/responsive';
 
 /** components */
-import Histogram from '../../common/Histogram/Histogram';
+import Histogram from '@/components/common/Histogram/Histogram';
 
 /** state */
 
@@ -20,10 +22,11 @@ interface ImageMetadataProps {
 
 export const ImageMetadata = ({ image }: ImageMetadataProps) => {
   const isLight = tinycolor(image.colors.dominant).isLight();
+  console.log(image.exif);
   return (
     <div
       className={clsx(
-        'm-4 flex flex-col gap-4',
+        'm-4 flex flex-1 flex-col gap-4',
         isLight ? 'text-neutral-950' : 'text-neutral-100'
       )}
     >
@@ -63,6 +66,35 @@ export const ImageMetadata = ({ image }: ImageMetadataProps) => {
           </span>
         </div>
       </div>
+      <div>
+        <ul>
+          <li className='flex items-center gap-2'>
+            <MdPhotoCamera className='text-xl' />
+            {image.exif.Model}
+          </li>
+          <li className='flex items-center gap-2'>
+            <MdCamera className='text-xl' />
+            {image.exif.LensModel}
+          </li>
+        </ul>
+      </div>
+      <div className='flex-1' />
+      {image.gps.latitude && image.gps.longitude && (
+        <div
+          className='h-[200px] overflow-hidden rounded-xl drop-shadow-md'
+          key={`${image.gps.latitude}x${image.gps.longitude}`}
+        >
+          <Map
+            defaultCenter={[image.gps.latitude || 0, image.gps.longitude || 0]}
+            defaultZoom={14}
+          >
+            <Marker
+              width={50}
+              anchor={[image.gps.latitude || 0, image.gps.longitude || 0]}
+            />
+          </Map>
+        </div>
+      )}
     </div>
   );
 };

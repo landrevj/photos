@@ -28,6 +28,9 @@ interface ImageGalleryProps {
   images: Image[];
 }
 
+const percentDifference = (A: number, B: number) =>
+  100 * Math.abs((A - B) / ((A + B) / 2));
+
 export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
   const searchParams = useSearchParams();
   const [position, setPosition] = useState(() =>
@@ -39,26 +42,26 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
   const container = useRef<HTMLDivElement | null>(null);
 
   // prevent panning when zoomed all the way out (mobile needs to be able to scroll)
-  const [isInitialState, setIsInitialState] = useState(true);
+  const [isInitialZoom, setIsInitialZoom] = useState(true);
   const [lastTouch, setLastTouch] = useState<number | null>(null);
   const onWheel = useCallback(
     (event: WheelEvent) => {
-      if (!isInitialState) {
+      if (!isInitialZoom) {
         return;
       }
       if (event.deltaY > 0) {
         event.stopPropagation();
       } else if (event.deltaY < 0) {
-        setIsInitialState(false);
+        setIsInitialZoom(false);
       }
     },
-    [isInitialState]
+    [isInitialZoom]
   );
   const onDoubleClick = useCallback(() => {
-    if (isInitialState) {
-      setIsInitialState(false);
+    if (isInitialZoom) {
+      setIsInitialZoom(false);
     }
-  }, [isInitialState]);
+  }, [isInitialZoom]);
   const onTouchStart = useCallback(
     (event: TouchEvent) => {
       const isDoubleTap = lastTouch && new Date().getTime() - lastTouch < 200;
@@ -139,6 +142,8 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
     };
   }, [handleResize]);
 
+  console.log('scale', imageScale);
+
   return (
     <div
       className='h-screen w-full bg-neutral-950 transition-colors'
@@ -151,13 +156,17 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
             initialScale={imageScale}
             minScale={imageScale}
             centerOnInit
-            panning={{ disabled: isInitialState }}
-            onZoom={(ref) => setIsInitialState(ref.state.scale === 1)}
+            panning={{ disabled: isInitialZoom }}
+            onZoom={(ref) => {
+              setIsInitialZoom(
+                percentDifference(ref.state.scale, imageScale) < 1
+              );
+            }}
           >
             {(utils) => (
               <section className='relative flex h-full flex-1 justify-center'>
                 <div className='absolute top-0 h-full w-full' ref={container}>
-                  <TransformComponent wrapperClass='!w-full !h-full  !overflow-visible'>
+                  <TransformComponent wrapperClass='!w-full !h-full !overflow-visible'>
                     <NextImage
                       src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/images/${image.awsFilename}`}
                       alt='image'
@@ -168,20 +177,30 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                         setImageClientWidth(img.clientWidth);
                         setImageClientHeight(img.clientHeight);
                         utils.resetTransform();
-                        setIsInitialState(true);
+                        setIsInitialZoom(true);
                       }}
                     />
-                    {/* </div> */}
                   </TransformComponent>
                 </div>
                 <Navigation
                   position={position}
                   images={images}
-                  onZoomIn={() => utils.zoomIn()}
-                  onZoomOut={() => utils.zoomOut()}
+                  onZoomIn={() => {
+                    utils.zoomIn();
+                    setIsInitialZoom(false);
+                  }}
+                  onZoomOut={() => {
+                    utils.zoomOut();
+                    setIsInitialZoom(
+                      percentDifference(
+                        Number(utils.instance.getContext().state.scale),
+                        imageScale
+                      ) < 1
+                    );
+                  }}
                   onZoomReset={() => {
                     utils.resetTransform();
-                    setIsInitialState(true);
+                    setIsInitialZoom(true);
                   }}
                   onNavForward={() => {
                     setPosition((prev) => prev - 1);
@@ -189,7 +208,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                       `/image/${images[position - 1]._id}?${searchParams}`
                     );
                     utils.resetTransform();
-                    setIsInitialState(true);
+                    setIsInitialZoom(true);
                   }}
                   onNavBackward={() => {
                     setPosition((prev) => prev + 1);
@@ -197,7 +216,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                       `/image/${images[position + 1]._id}?${searchParams}`
                     );
                     utils.resetTransform();
-                    setIsInitialState(true);
+                    setIsInitialZoom(true);
                   }}
                 />
               </section>

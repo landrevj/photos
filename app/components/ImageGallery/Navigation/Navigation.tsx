@@ -88,13 +88,13 @@ export const Navigation = ({
           <Button
             className='pointer-events-auto rounded-full px-1'
             color='transparent'
-            onClick={onZoomIn}
+            onClick={onZoomOut}
             icon={<MdZoomOut className='text-2xl' />}
           />
           <Button
             className='pointer-events-auto rounded-full px-1'
             color='transparent'
-            onClick={onZoomOut}
+            onClick={onZoomIn}
             icon={<MdZoomIn className='text-2xl' />}
           />
         </div>

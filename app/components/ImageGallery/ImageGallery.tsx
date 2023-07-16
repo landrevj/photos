@@ -36,13 +36,73 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
   const image = images[position];
   const bgColor = image.colors.dominant || '#000';
 
-  const scaleUp = true;
+  const container = useRef<HTMLDivElement | null>(null);
 
+  // prevent panning when zoomed all the way out (mobile needs to be able to scroll)
+  const [isInitialState, setIsInitialState] = useState(true);
+  const [lastTouch, setLastTouch] = useState<number | null>(null);
+  const onWheel = useCallback(
+    (event: WheelEvent) => {
+      if (!isInitialState) {
+        return;
+      }
+      if (event.deltaY > 0) {
+        event.stopPropagation();
+      } else if (event.deltaY < 0) {
+        setIsInitialState(false);
+      }
+    },
+    [isInitialState]
+  );
+  const onDoubleClick = useCallback(() => {
+    if (isInitialState) {
+      setIsInitialState(false);
+    }
+  }, [isInitialState]);
+  const onTouchStart = useCallback(
+    (event: TouchEvent) => {
+      const isDoubleTap = lastTouch && new Date().getTime() - lastTouch < 200;
+      if (isDoubleTap && event.touches.length === 1) {
+        onDoubleClick();
+      } else {
+        setLastTouch(new Date().getTime());
+      }
+    },
+    [lastTouch, onDoubleClick]
+  );
+
+  useEffect(() => {
+    const ref = container.current;
+    if (ref) {
+      ref.addEventListener('wheel', onWheel, { capture: true });
+      ref.addEventListener('dblClick', onDoubleClick, {
+        capture: true,
+      });
+      ref.addEventListener('touchstart', onTouchStart, {
+        capture: true,
+      });
+    }
+
+    return () => {
+      if (ref) {
+        ref.removeEventListener('wheel', onWheel, {
+          capture: true,
+        });
+        ref.removeEventListener('dblClick', onDoubleClick, {
+          capture: true,
+        });
+        ref.removeEventListener('touchstart', onTouchStart, {
+          capture: true,
+        });
+      }
+    };
+  }, [onDoubleClick, onTouchStart, onWheel]);
+
+  // keep image contained to parent when zoomed out
   const [imageClientWidth, setImageClientWidth] = useState<number>(0);
   const [imageClientHeight, setImageClientHeight] = useState<number>(0);
   const [containerWidth, setContainerWidth] = useState<number>(0);
   const [containerHeight, setContainerHeight] = useState<number>(0);
-  const container = useRef<HTMLDivElement | null>(null);
 
   const imageScale = useMemo(() => {
     if (
@@ -54,18 +114,11 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
       return 0;
     }
 
-    const scale = Math.min(
+    return Math.min(
       containerWidth / imageClientWidth,
       containerHeight / imageClientHeight
     );
-    return scaleUp ? scale : Math.max(scale, 1);
-  }, [
-    scaleUp,
-    containerWidth,
-    containerHeight,
-    imageClientWidth,
-    imageClientHeight,
-  ]);
+  }, [containerWidth, containerHeight, imageClientWidth, imageClientHeight]);
 
   const handleResize = useCallback(() => {
     if (container.current !== null) {
@@ -98,6 +151,8 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
             initialScale={imageScale}
             minScale={imageScale}
             centerOnInit
+            panning={{ disabled: isInitialState }}
+            onZoom={(ref) => setIsInitialState(ref.state.scale === 1)}
           >
             {(utils) => (
               <section className='relative flex h-full flex-1 justify-center'>
@@ -113,6 +168,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                         setImageClientWidth(img.clientWidth);
                         setImageClientHeight(img.clientHeight);
                         utils.resetTransform();
+                        setIsInitialState(true);
                       }}
                     />
                     {/* </div> */}
@@ -128,6 +184,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                       `/image/${images[position - 1]._id}?${searchParams}`
                     );
                     utils.resetTransform();
+                    setIsInitialState(true);
                   }}
                   onNavBackward={() => {
                     setPosition((prev) => prev + 1);
@@ -135,6 +192,7 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
                       `/image/${images[position + 1]._id}?${searchParams}`
                     );
                     utils.resetTransform();
+                    setIsInitialState(true);
                   }}
                 />
               </section>

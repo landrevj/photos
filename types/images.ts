@@ -27,7 +27,13 @@ export interface Image {
    * RGB Histogram data
    */
   histogram: {
+    /**
+     * Max y value for all the data. Useful for determining graph domain.
+     */
     yMax: number;
+    /**
+     * Object containing entries for per-channel histogram data.
+     */
     channels: {
       red: { max: number; data: number[] };
       green: { max: number; data: number[] };
@@ -46,6 +52,9 @@ export interface Image {
    * Image exif data
    */
   gps: { latitude?: number; longitude?: number };
+  /**
+   * Contains color information about the image.
+   */
   colors: {
     /**
      * Hex string for the image's dominant color

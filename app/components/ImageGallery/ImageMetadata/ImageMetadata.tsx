@@ -3,7 +3,12 @@ import tinycolor from 'tinycolor2';
 
 /** external components */
 import { Map, Marker } from 'pigeon-maps';
-import { MdCamera, MdPhotoCamera } from '@/lib/icons';
+import {
+  MdCamera,
+  MdLocationPin,
+  MdNotListedLocation,
+  MdPhotoCamera,
+} from '@/lib/icons';
 import { ParentSize } from '@visx/responsive';
 
 /** components */
@@ -79,9 +84,9 @@ export const ImageMetadata = ({ image }: ImageMetadataProps) => {
         </ul>
       </div>
       <div className='flex-1' />
-      {image.gps.latitude && image.gps.longitude && (
+      {image.gps.latitude && image.gps.longitude ? (
         <div
-          className='h-[200px] overflow-hidden rounded-xl drop-shadow-md'
+          className='h-[200px] overflow-hidden rounded-xl bg-black bg-opacity-30 drop-shadow-md'
           key={`${image.gps.latitude}x${image.gps.longitude}`}
         >
           <Map
@@ -89,10 +94,17 @@ export const ImageMetadata = ({ image }: ImageMetadataProps) => {
             defaultZoom={14}
           >
             <Marker
-              width={50}
+              width={36}
               anchor={[image.gps.latitude || 0, image.gps.longitude || 0]}
-            />
+            >
+              <MdLocationPin className='text-4xl text-red-600' />
+            </Marker>
           </Map>
+        </div>
+      ) : (
+        <div className='flex h-[200px] flex-col items-center justify-center gap-2 overflow-hidden rounded-xl bg-black bg-opacity-30 text-opacity-70'>
+          <MdNotListedLocation className='text-6xl' />
+          <span className='italic'>Missing GPS data.</span>
         </div>
       )}
     </div>

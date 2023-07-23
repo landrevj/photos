@@ -13,6 +13,7 @@ import Link from 'next/link';
 
 /** types */
 import type { ColorTypes } from '../types';
+import Spinner from '../Spinner/Spinner';
 
 export interface ButtonProps
   extends React.DetailedHTMLProps<
@@ -22,19 +23,22 @@ export interface ButtonProps
     React.AriaAttributes {
   href?: string;
   icon?: React.ReactNode;
-  color?: ColorTypes | 'transparent';
+  color?: ColorTypes | 'transparent' | 'outline';
+  isLoading?: boolean;
 }
 
 export const Button = ({
   children,
   color = 'secondary',
   className,
+  disabled,
   href,
   icon,
+  isLoading,
   ...rest
 }: ButtonProps) => {
   const classString = twMerge(
-    'rounded-lg px-4 py-1 hover:opacity-80 active:opacity-60 inline-block transition-opacity transition-colors drop-shadow',
+    'rounded-lg px-3 py-1 hover:opacity-80 active:opacity-60 inline-block drop-shadow',
     clsx(
       color === 'primary' && 'bg-gradient-primary text-white',
       color === 'secondary' && 'bg-gradient-secondary text-white',
@@ -42,7 +46,10 @@ export const Button = ({
       color === 'success' && 'bg-gradient-success text-white',
       color === 'warning' && 'bg-gradient-warning text-white',
       color === 'error' && 'bg-gradient-error text-white',
-      color === 'transparent' && 'bg-transparent drop-shadow-none'
+      color === 'outline' && 'bg-transparent border-2 border-current',
+      color === 'transparent' &&
+        'bg-transparent drop-shadow-none hover:bg-neutral-50 hover:bg-opacity-20',
+      (disabled || isLoading) && 'hover:opacity-50 active:opacity-50 opacity-50'
     ),
     className
   );
@@ -60,9 +67,9 @@ export const Button = ({
 
   return (
     // eslint-disable-next-line react/button-has-type
-    <button className={classString} {...rest}>
+    <button className={classString} disabled={disabled || isLoading} {...rest}>
       <div className='flex items-center gap-2'>
-        {icon}
+        {isLoading ? <Spinner isLoading className='h-4 w-4 border-2' /> : icon}
         {children}
       </div>
     </button>

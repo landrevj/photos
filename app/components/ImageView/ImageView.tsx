@@ -14,29 +14,27 @@ import Spinner from '@/components/common/Spinner/Spinner';
 /** state */
 
 /** helpers */
+import { percentDifference } from '@/lib/math';
 import { replace } from '@/lib/history/replace';
 
 /** types */
-import type { Image } from '@/types/images';
+import type { Image as ImageType } from '@/types/images';
 
-interface ImageGalleryProps {
+interface ImageViewProps {
   /**
    * The id of the current image being displayed
    */
-  value: string;
+  imageId: string;
   /**
    * The images the user can cycle through
    */
-  images: Image[];
+  images: ImageType[];
 }
 
-const percentDifference = (A: number, B: number) =>
-  100 * Math.abs((A - B) / ((A + B) / 2));
-
-export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
+export const ImageView = ({ imageId, images = [] }: ImageViewProps) => {
   const searchParams = useSearchParams();
   const [position, setPosition] = useState(() =>
-    images.findIndex((img) => img._id === value)
+    images.findIndex((img) => img._id === imageId)
   );
   const image = images[position];
   const bgColor = image.colors.dominant || '#000';
@@ -246,4 +244,4 @@ export const ImageGallery = ({ value, images = [] }: ImageGalleryProps) => {
   );
 };
 
-export default ImageGallery;
+export default ImageView;

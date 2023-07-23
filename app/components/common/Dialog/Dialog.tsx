@@ -1,3 +1,6 @@
+import clsx from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
 /** external components */
 import { Dialog as HeadlessDialog } from '@headlessui/react';
 import { MdClose } from '@/lib/icons';
@@ -13,39 +16,53 @@ import Card from '../Card/Card';
 /** types */
 import type { ReactNode } from 'react';
 
-interface ModalProps {
+interface DialogProps {
+  children: ReactNode;
+  className?: string;
+  containerClassName?: string;
+  isFullscreen?: boolean;
   isOpen: boolean;
   onClose: () => void;
-  title: string;
-  description: string;
-  children: ReactNode;
 }
 
 export const Dialog = ({
   children,
-  description,
+  className,
+  containerClassName,
+  isFullscreen,
   isOpen,
   onClose,
-  title,
-}: ModalProps) => {
+}: DialogProps) => {
   return (
-    <HeadlessDialog open={isOpen} onClose={onClose} className='relative z-50'>
-      <div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 p-8'>
-        <Card>
-          <HeadlessDialog.Panel>
-            <Button
-              className='absolute right-0'
-              color='transparent'
-              icon={<MdClose />}
-              onClick={onClose}
-            />
-            <HeadlessDialog.Title>
-              <h1 className='text-2xl'>{title || 'dialog'}</h1>
-            </HeadlessDialog.Title>
-            <HeadlessDialog.Description>
-              <h2 className='text-blue-700'>{description || 'description'}</h2>
-            </HeadlessDialog.Description>
-
+    <HeadlessDialog
+      open={isOpen}
+      onClose={onClose}
+      className={twMerge('relative z-50', className)}
+    >
+      <div
+        className={twMerge(
+          'fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 p-8',
+          clsx(isFullscreen && 'p-0')
+        )}
+      >
+        <Card
+          className={clsx(
+            'max-h-screen overflow-y-auto',
+            isFullscreen && 'h-screen w-screen rounded-none p-0'
+          )}
+        >
+          <Button
+            className={clsx(
+              'absolute right-0 p-0',
+              isFullscreen && 'right-4 top-4'
+            )}
+            color='transparent'
+            icon={<MdClose className='text-xl' />}
+            onClick={onClose}
+          />
+          <HeadlessDialog.Panel
+            className={twMerge('min-h-full', containerClassName)}
+          >
             {children}
           </HeadlessDialog.Panel>
         </Card>
@@ -54,4 +71,5 @@ export const Dialog = ({
   );
 };
 
+export const { Title, Description } = HeadlessDialog;
 export default Dialog;

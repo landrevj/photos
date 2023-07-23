@@ -1,8 +1,9 @@
-import type { Image } from '@/types/images';
 import { useMemo } from 'react';
 import { useWindowWidth } from '../hooks/useWindowWidth';
 
-const getStartingValues = (): {
+const getStartingValues = (
+  ratioMultiplier: number = 1
+): {
   width: number;
   maxRatioWidth: number;
   imageStyles: { width: string; paddingBottom: string }[];
@@ -10,37 +11,37 @@ const getStartingValues = (): {
 }[] => [
   {
     width: 640,
-    maxRatioWidth: 1.16,
+    maxRatioWidth: 1.16 * ratioMultiplier,
     imageStyles: [],
     lastRowWidthRemainder: '0%',
   },
   {
     width: 768,
-    maxRatioWidth: 2.32,
+    maxRatioWidth: 2.32 * ratioMultiplier,
     imageStyles: [],
     lastRowWidthRemainder: '0%',
   },
   {
     width: 1024,
-    maxRatioWidth: 3.48,
+    maxRatioWidth: 3.48 * ratioMultiplier,
     imageStyles: [],
     lastRowWidthRemainder: '0%',
   },
   {
     width: 1280,
-    maxRatioWidth: 4.64,
+    maxRatioWidth: 4.64 * ratioMultiplier,
     imageStyles: [],
     lastRowWidthRemainder: '0%',
   },
   {
     width: 1536,
-    maxRatioWidth: 5.8,
+    maxRatioWidth: 5.8 * ratioMultiplier,
     imageStyles: [],
     lastRowWidthRemainder: '0%',
   },
   {
     width: Number.MAX_SAFE_INTEGER,
-    maxRatioWidth: 6.98,
+    maxRatioWidth: 6.98 * ratioMultiplier,
     imageStyles: [],
     lastRowWidthRemainder: '0%',
   },
@@ -48,11 +49,12 @@ const getStartingValues = (): {
 
 // @see https://github.com/fmkra/next-gallery/blob/development/src/Gallery.tsx
 export const useGalleryLayout = (
-  images: Image[],
+  images: { width: number; height: number }[],
+  ratioMultiplier = 1,
   spanLastRowThreshold = 100
 ) => {
   const breakpoints = useMemo(() => {
-    return getStartingValues().map((breakpoint) => {
+    return getStartingValues(ratioMultiplier).map((breakpoint) => {
       let currentRatio = 0;
       const imageStyles: { width: string; paddingBottom: string }[] = [];
       for (let i = 0; i < images.length; i += 1) {
@@ -96,7 +98,7 @@ export const useGalleryLayout = (
         lastRowWidthRemainder: shouldSpanLastRow ? `${widthRemainder}%` : '0%',
       };
     });
-  }, [images, spanLastRowThreshold]);
+  }, [images, ratioMultiplier, spanLastRowThreshold]);
 
   const windowWidth = useWindowWidth();
 

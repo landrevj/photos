@@ -1,3 +1,4 @@
+import { Semaphore } from 'async-mutex';
 import { v4 as uuid } from 'uuid';
 
 interface UploaderOptions {
@@ -6,6 +7,7 @@ interface UploaderOptions {
   threadsQuantity: number;
   file: File;
   useUUIDForKey?: boolean;
+  uuid?: string;
 }
 
 type Part = {
@@ -13,8 +15,12 @@ type Part = {
   PartNumber: number;
 };
 
+const MAX_INSTANCES = 3;
+
 // @see https://github.com/aws-samples/amazon-s3-multipart-upload-transfer-acceleration/blob/main/frontendV2/src/utils/upload.js
 export class Uploader {
+  static maxInstancesSemaphore = new Semaphore(MAX_INSTANCES);
+
   useTransferAcceleration: boolean;
   useUUIDForKey: boolean;
   chunkSize: number;
@@ -54,7 +60,7 @@ export class Uploader {
     this.timeout = 0;
     this.file = options.file;
     this.uploadFilename = this.useUUIDForKey
-      ? `${uuid()}.${this.file.name.split('.').pop()}`
+      ? `${options.uuid || uuid()}.${this.file.name.split('.').pop()}`
       : this.file.name;
     this.aborted = false;
     this.uploadedSize = 0;
@@ -70,7 +76,11 @@ export class Uploader {
   }
 
   start() {
-    this.initialize();
+    console.log('starting', this.file.name);
+    Uploader.maxInstancesSemaphore.runExclusive(() => {
+      console.log('initializing', this.file.name);
+      return this.initialize();
+    });
   }
 
   async initialize() {

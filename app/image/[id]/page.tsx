@@ -6,14 +6,14 @@ import { useSearchParams } from 'next/navigation';
 
 /** components */
 import { useGetImageQuery, useGetImagesQuery } from '@/lib/redux/state/api';
-import ImageGallery from '@/components/ImageGallery/ImageGallery';
+import ImageView from '@/app/components/ImageView/ImageView';
 
 /** state */
 
 /** helpers */
 
 /** types */
-import type { Image, ImageQueryParams } from '@/types/images';
+import type { ImageQueryParams, Image as ImageType } from '@/types/images';
 
 interface ImagePageProps {
   params: { id: string };
@@ -33,9 +33,9 @@ export const ImagePage = ({ params }: ImagePageProps) => {
 
   if (hasSearch && imagesQuery.isSuccess && !imagesQuery.isFetching) {
     return (
-      <ImageGallery
-        value={params.id}
-        images={imagesQuery.data.reduce<Image[]>(
+      <ImageView
+        imageId={params.id}
+        images={imagesQuery.data.reduce<ImageType[]>(
           (acc, curr) => [...acc, ...curr.images],
           []
         )}
@@ -44,7 +44,7 @@ export const ImagePage = ({ params }: ImagePageProps) => {
   }
 
   if (!hasSearch && imageQuery.isSuccess && !imageQuery.isFetching) {
-    return <ImageGallery value={params.id} images={[imageQuery.data]} />;
+    return <ImageView imageId={params.id} images={[imageQuery.data]} />;
   }
 
   return null;

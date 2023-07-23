@@ -5,7 +5,11 @@ module.exports = {
     './lib/gradients.ts',
   ],
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        '3xl': '1792px',
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),

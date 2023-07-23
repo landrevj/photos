@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import NextImage from 'next/image';
 
 /** external components */
 
@@ -17,6 +18,7 @@ import UploadForm from './UploadForm/UploadForm';
 import { useGetImagesQuery } from '@/lib/redux/state/api';
 
 /** helpers */
+import { createImageColorDataUrl } from '@/lib/images/utils';
 
 /** types */
 import type { ImageQueryParams } from '@/types/images';
@@ -52,8 +54,8 @@ export const Gallery = () => {
           upload
         </Button>
         <Dialog
-          title='upload images'
-          description='drag and drop images here to upload them'
+          isFullscreen
+          // containerClassName='pt-8 px-5 pb-5'
           isOpen={isUploadDialogOpen}
           onClose={() => {
             setIsUploadDialogOpen(false);
@@ -73,7 +75,24 @@ export const Gallery = () => {
         data.map((group) => (
           <div key={group._id}>
             <GroupHeading date={group._id} groupBy={query.groupBy} />
-            <ImageGrid images={group.images} />
+            <ImageGrid
+              images={group.images}
+              getImageLink={(image) =>
+                `/image/${image._id}?${searchParams.toString()}`
+              }
+            >
+              {(image) => (
+                <NextImage
+                  src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/images/${image.awsFilename}`}
+                  alt={image.name}
+                  fill
+                  blurDataURL={createImageColorDataUrl(image.colors.dominant)}
+                  placeholder='blur'
+                  className='overflow-hidden rounded-xl drop-shadow'
+                  sizes='(min-width: 1536px) 20vw, (min-width: 1280px) 20vw, (min-width: 1024px) 30vw, (min-width: 768px) 50vw, 100vw'
+                />
+              )}
+            </ImageGrid>
           </div>
         ))}
     </div>

@@ -1,73 +1,96 @@
 'use client';
 
-import { useSearchParams } from 'next/navigation';
+import { twMerge } from 'tailwind-merge';
 
 /** external components */
 import Link from 'next/link';
-import NextImage from 'next/image';
 
 /** components */
 
 /** state */
 
 /** helpers */
-import { createImageColorDataUrl } from '@/lib/images/utils';
-
-/** types */
-import type { Image } from '@/types/images';
 import { useGalleryLayout } from '@/lib/images/useGalleryLayout';
 
-interface ImageGridProps {
-  images: Image[];
-  gap?: number;
+/** types */
+import type { ReactNode } from 'react';
+
+type WidthHeight = { width: number; height: number };
+interface ImageGridProps<T extends WidthHeight> {
+  children: (image: T) => ReactNode;
   className?: string;
+  gap?: number;
+  getImageLink?: (img: T) => string;
+  images: T[];
+  ratioMultiplier?: number;
 }
 
-export const ImageGrid = ({ className, images, gap = 8 }: ImageGridProps) => {
-  const searchParams = useSearchParams();
-  const { imageStyles, lastRowWidthRemainder } = useGalleryLayout(images);
+export const ImageGrid = <T extends WidthHeight>({
+  children,
+  className,
+  images,
+  gap = 8,
+  getImageLink,
+  ratioMultiplier,
+}: ImageGridProps<T>) => {
+  const { imageStyles, lastRowWidthRemainder } = useGalleryLayout(
+    images,
+    ratioMultiplier
+  );
 
   if (!imageStyles || !lastRowWidthRemainder) return null;
 
   return (
     <div
-      className={className}
+      className={twMerge('flex flex-wrap', className)}
       style={{
-        display: 'flex',
-        flexWrap: 'wrap',
         margin: `-${gap / 2}px`,
       }}
     >
-      {images.map((image, index) => (
-        <Link
-          key={image.awsFilename}
-          className='border-box relative flex-shrink-0 flex-grow'
-          style={imageStyles[index]}
-          href={`/image/${image._id}?${searchParams.toString()}`}
-        >
-          <div
-            className='absolute'
-            style={{
-              top: `${gap / 2}px`,
-              left: `${gap / 2}px`,
-              right: `${gap / 2}px`,
-              bottom: `${gap / 2}px`,
-            }}
+      {images.map((image, index) =>
+        getImageLink ? (
+          <Link
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            className='border-box relative shrink-0 grow'
+            style={imageStyles[index]}
+            href={getImageLink ? getImageLink(image) : ''}
           >
-            <NextImage
-              src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/images/${image.awsFilename}`}
-              alt={image.name}
-              fill
-              blurDataURL={createImageColorDataUrl(image.colors.dominant)}
-              placeholder='blur'
-              className='overflow-hidden rounded-xl drop-shadow'
-              sizes='(min-width: 1536px) 20vw, (min-width: 1280px) 20vw, (min-width: 1024px) 30vw, (min-width: 768px) 50vw, 100vw'
-            />
+            <div
+              className='absolute'
+              style={{
+                top: `${gap / 2}px`,
+                left: `${gap / 2}px`,
+                right: `${gap / 2}px`,
+                bottom: `${gap / 2}px`,
+              }}
+            >
+              {children(image)}
+            </div>
+          </Link>
+        ) : (
+          <div
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            className='border-box relative shrink-0 grow'
+            style={imageStyles[index]}
+          >
+            <div
+              className='absolute'
+              style={{
+                top: `${gap / 2}px`,
+                left: `${gap / 2}px`,
+                right: `${gap / 2}px`,
+                bottom: `${gap / 2}px`,
+              }}
+            >
+              {children(image)}
+            </div>
           </div>
-        </Link>
-      ))}
+        )
+      )}
       <div
-        className='flex-shrink-0 flex-grow'
+        className='shrink-0 grow'
         style={{
           width: lastRowWidthRemainder,
         }}

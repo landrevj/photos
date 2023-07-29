@@ -185,7 +185,7 @@ export const ImageView = ({ imageId, images = [] }: ImageViewProps) => {
                 </div>
                 <Spinner
                   isLoading={isImageHidden}
-                  containerClassName='absolute top-0 flex h-full w-full items-center justify-center'
+                  containerClassName='absolute top-0 flex h-full w-full items-center justify-center text-white'
                 />
                 <Navigation
                   position={position}

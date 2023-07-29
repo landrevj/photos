@@ -38,7 +38,7 @@ export const Button = ({
   ...rest
 }: ButtonProps) => {
   const classString = twMerge(
-    'rounded-lg px-3 py-1 hover:opacity-80 active:opacity-60 inline-block drop-shadow',
+    'rounded-lg px-3 py-1 hover:opacity-80 active:opacity-60 inline-block drop-shadow transition-opacity',
     clsx(
       color === 'primary' && 'bg-gradient-primary text-white',
       color === 'secondary' && 'bg-gradient-secondary text-white',

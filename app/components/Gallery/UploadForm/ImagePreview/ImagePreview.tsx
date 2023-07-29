@@ -3,12 +3,16 @@
 import clsx from 'clsx';
 
 /** external components */
+import { MdCheck } from '@/lib/icons';
 import NextImage from 'next/image';
 
 /** components */
 
 /** state */
-import { getFileProgressMap } from '@/lib/redux/state/uploader/uploader.selectors';
+import {
+  getFileMetadata,
+  getFileProgressMap,
+} from '@/lib/redux/state/uploader/uploader.selectors';
 import { useSelector } from '@/lib/redux';
 import { useState } from 'react';
 
@@ -21,6 +25,9 @@ interface ImagePreviewProps {
 
 export const ImagePreview = ({ uuid }: ImagePreviewProps) => {
   const fileProgress = useSelector(getFileProgressMap);
+  const metadata = useSelector(
+    (state) => getFileMetadata(state, uuid || '') ?? {}
+  );
   const state = fileProgress[uuid];
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
@@ -53,6 +60,11 @@ export const ImagePreview = ({ uuid }: ImagePreviewProps) => {
             setIsImageLoaded(true);
           }}
         />
+      )}
+      {!!Object.keys(metadata).length && (
+        <div className='absolute inset-0 flex items-center justify-center rounded-xl bg-black bg-opacity-30'>
+          <MdCheck className='text-8xl text-white drop-shadow-sm' />
+        </div>
       )}
     </div>
   );

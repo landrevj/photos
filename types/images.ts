@@ -66,6 +66,10 @@ export interface Image {
     complement: string;
   };
   /**
+   * If true the image will show up as one of the random images on the home page
+   */
+  isAllowedOnHomepage?: boolean;
+  /**
    * Datetime the photo was taken (exif DateTimeOriginal) or the createdAt date if unspecified
    */
   takenAt: Date;

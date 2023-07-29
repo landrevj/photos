@@ -1,18 +1,21 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import clsx from 'clsx';
+import tinycolor from 'tinycolor2';
 
 /** external components */
-import { Map, Marker } from 'pigeon-maps';
-import { MdAutoAwesome, MdEdit, MdLocationPin } from '@/lib/icons';
-import NextImage from 'next/image';
-import { ParentSize } from '@visx/responsive';
+import { MdAutoAwesome, MdEdit } from '@/lib/icons';
 
 /** components */
 import Button from '@/components/common/Button/Button';
 import Card from '@/components/common/Card/Card';
-import Histogram from '@/components/common/Histogram/Histogram';
-import Switch from '@/components/common/Switch/Switch';
+import ClickToEditTextInput from '@/components/common/ClickToEditTextInput/ClickToEditTextInput';
+import ColorInputs from './ColorInputs/ColorInputs';
+import ExifInput from './ExifInput/ExifInput';
+import GpsInput from './GpsInput/GpsInput';
+import HistogramInput from './HistogramInput/HistogramInput';
+import HomepageToggle from './HomepageToggle/HomepageToggle';
 
 /** state */
 import {
@@ -23,8 +26,8 @@ import { useDispatch, useSelector } from '@/lib/redux';
 import { setFileMetadata } from '@/lib/redux/state/uploader/uploader.slice';
 
 /** helpers */
-import { createImageColorDataUrl, getImageFileData } from '@/lib/images/utils';
 import { bytesToMB } from '@/lib/math';
+import { getImageFileData } from '@/lib/images/utils';
 
 /** types */
 interface MetadataEditFormProps {
@@ -39,15 +42,19 @@ export const MetadataEditForm = ({
   uuid,
 }: MetadataEditFormProps) => {
   const dispatch = useDispatch();
-  const metadata =
-    useSelector((state) => getFileMetadata(state, uuid || '')) || {};
+  const metadata = useSelector(
+    (state) => getFileMetadata(state, uuid || '') ?? {}
+  );
   const fileProgress = useSelector(getFileProgressMap);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [yMaxMaximum, setYMaxMaximum] = useState(metadata.histogram?.yMax ?? 0);
   const state = fileProgress[uuid || ''];
 
-  if (!file || !uuid) return null;
+  useEffect(() => {
+    setYMaxMaximum((metadata.histogram?.yMax ?? 0) * 2);
+  }, [uuid]);
 
-  console.log(metadata);
+  if (!file || !uuid) return null;
 
   return (
     <div
@@ -55,10 +62,25 @@ export const MetadataEditForm = ({
       style={{ backgroundColor: metadata.colors?.dominant || '#000' }}
     >
       <div className='flex h-full w-full flex-col flex-wrap gap-4 bg-gradient-to-tr from-[#000000aa] to-[#00000066] p-8'>
-        <div className='flex flex-wrap justify-between'>
-          <div className='flex items-center gap-3 text-2xl'>
-            <h3 className=' ont-semibold'>{file.name}</h3>
-            <MdEdit />
+        <div className='flex max-w-full justify-between gap-4 overflow-hidden'>
+          <div className='flex shrink items-center gap-3 overflow-hidden text-2xl'>
+            <ClickToEditTextInput
+              className='overflow-hidden'
+              value={metadata.name}
+              onChange={(event) => {
+                dispatch(
+                  setFileMetadata({
+                    uuid,
+                    metadata: {
+                      ...metadata,
+                      name: event.target.value ?? metadata.name,
+                    },
+                  })
+                );
+              }}
+            />
+            {/* <h3 className=' ont-semibold'>{file.name}</h3> */}
+            <MdEdit className='flex-none' />
           </div>
           <Button
             color='outline'
@@ -81,7 +103,10 @@ export const MetadataEditForm = ({
         <div className='flex flex-1 flex-wrap gap-8'>
           <div className='flex flex-1 flex-col gap-8'>
             <Card
-              className='flex justify-between gap-2'
+              className={clsx(
+                'flex justify-between gap-2',
+                tinycolor(metadata.colors?.dominant).isLight() && 'text-black'
+              )}
               style={{ backgroundColor: `${metadata.colors?.dominant}ee` }}
             >
               <span>
@@ -94,98 +119,110 @@ export const MetadataEditForm = ({
                 <span className='opacity-75'>MB</span>
               </span>
             </Card>
-            <div className='flex flex-col gap-2'>
-              <Switch label='Allow on homepage' />
-              <div className='relative flex h-52 items-center justify-center overflow-hidden rounded-xl drop-shadow'>
-                <NextImage
-                  className='object-cover'
-                  src={`${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/images/${state?.awsFilename}`}
-                  alt='hero preview'
-                  fill
-                  blurDataURL={createImageColorDataUrl(
-                    metadata?.colors?.dominant || '#2e2e2e',
-                    100,
-                    100
-                  )}
-                  placeholder='blur'
-                  sizes='25vw'
-                />
-                <div
-                  className='absolute inset-0'
-                  style={{
-                    background: `linear-gradient(45deg, ${metadata?.colors?.dominant}33, ${metadata?.colors?.complement}66)`,
-                  }}
-                />
-                <div className='relative w-full break-words p-10 text-center'>
-                  <span className='break-all text-5xl font-extrabold text-white mix-blend-difference'>
-                    landrevj.photos
-                  </span>
-                </div>
-              </div>
-            </div>
-            <div className='flex flex-col gap-2'>
-              <h4>Colors</h4>
-              <div className='flex flex-1 gap-2'>
-                <div
-                  className='flex flex-1 items-center justify-center rounded-xl p-2 text-center drop-shadow'
-                  style={{ backgroundColor: metadata.colors?.dominant }}
-                >
-                  <span className='italic'>dominant</span>
-                </div>
-                <div
-                  className='flex flex-1 items-center justify-center rounded-xl p-2 text-center drop-shadow'
-                  style={{ backgroundColor: metadata.colors?.complement }}
-                >
-                  <span className='italic'>complement</span>
-                </div>
-              </div>
-            </div>
-            <div className='flex flex-col gap-2'>
-              <h4>Histogram</h4>
-              <Card className='h-32 overflow-hidden bg-neutral-800 p-0'>
-                <ParentSize>
-                  {({ width }) =>
-                    metadata.histogram && (
-                      <Histogram
-                        data={metadata.histogram}
-                        width={width}
-                        height={128}
-                      />
-                    )
-                  }
-                </ParentSize>
-              </Card>
-            </div>
-            <div className='flex h-80 flex-col gap-2'>
-              <h4>GPS</h4>
-              <div className='flex-1 overflow-hidden rounded-xl drop-shadow'>
-                <Map
-                  key={`${metadata.gps?.latitude}x${metadata.gps?.longitude}`}
-                  defaultCenter={[
-                    metadata.gps?.latitude || 0,
-                    metadata.gps?.longitude || 0,
-                  ]}
-                  defaultZoom={15}
-                >
-                  <Marker
-                    width={36}
-                    anchor={[
-                      metadata.gps?.latitude || 0,
-                      metadata.gps?.longitude || 0,
-                    ]}
-                  >
-                    <MdLocationPin className='text-4xl text-red-600' />
-                  </Marker>
-                </Map>
-              </div>
-            </div>
+            <HomepageToggle
+              awsFilename={state?.awsFilename}
+              formValues={metadata}
+              onChange={(value) =>
+                dispatch(
+                  setFileMetadata({
+                    uuid,
+                    metadata: {
+                      ...metadata,
+                      isAllowedOnHomepage: value,
+                    },
+                  })
+                )
+              }
+            />
+            <ColorInputs
+              formValues={metadata}
+              onDominantChange={(color, areColorsSynced) =>
+                dispatch(
+                  setFileMetadata({
+                    uuid,
+                    metadata: {
+                      ...metadata,
+                      colors: {
+                        dominant: color,
+                        complement: areColorsSynced
+                          ? tinycolor(color).complement().toHexString()
+                          : metadata.colors!.complement,
+                      },
+                    },
+                  })
+                )
+              }
+              onComplementChange={(color, areColorsSynced) =>
+                dispatch(
+                  setFileMetadata({
+                    uuid,
+                    metadata: {
+                      ...metadata,
+                      colors: {
+                        complement: color,
+                        dominant: areColorsSynced
+                          ? tinycolor(color).complement().toHexString()
+                          : metadata.colors!.dominant,
+                      },
+                    },
+                  })
+                )
+              }
+              onLockChange={(areColorsSynced) => {
+                if (areColorsSynced) {
+                  dispatch(
+                    setFileMetadata({
+                      uuid,
+                      metadata: {
+                        ...metadata,
+                        colors: {
+                          ...metadata.colors!,
+                          complement: tinycolor(metadata.colors?.dominant)
+                            .complement()
+                            .toHexString(),
+                        },
+                      },
+                    })
+                  );
+                }
+              }}
+            />
+            <HistogramInput
+              max={yMaxMaximum}
+              formValues={metadata}
+              onChange={(event) => {
+                dispatch(
+                  setFileMetadata({
+                    uuid,
+                    metadata: {
+                      ...metadata,
+                      histogram: {
+                        ...metadata.histogram!,
+                        yMax:
+                          Number(event.target.value) ??
+                          metadata.histogram?.yMax,
+                      },
+                    },
+                  })
+                );
+              }}
+            />
+            <GpsInput
+              formValues={metadata}
+              onDropPin={(latitude, longitude) => {
+                dispatch(
+                  setFileMetadata({
+                    uuid,
+                    metadata: {
+                      ...metadata,
+                      gps: { latitude, longitude },
+                    },
+                  })
+                );
+              }}
+            />
           </div>
-          <div className='flex flex-1 flex-col gap-4'>
-            <div>
-              <h4>EXIF</h4>
-              <hr className='border-white border-opacity-50' />
-            </div>
-          </div>
+          <ExifInput formValues={metadata} />
         </div>
       </div>
     </div>

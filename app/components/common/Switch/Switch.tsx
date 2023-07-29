@@ -33,7 +33,7 @@ export const Switch = ({
           checked={enabled}
           onChange={onChange}
           className={clsx(
-            'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2',
+            'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none',
             enabled ? 'bg-blue-600' : 'bg-gray-400'
           )}
         >
@@ -45,7 +45,9 @@ export const Switch = ({
           />
         </HeadlessSwitch>
         {label && labelPosition === 'after' && (
-          <HeadlessSwitch.Label className='mr-4'>{label}</HeadlessSwitch.Label>
+          <HeadlessSwitch.Label className='mr-4 cursor-pointer'>
+            {label}
+          </HeadlessSwitch.Label>
         )}
       </div>
     </HeadlessSwitch.Group>

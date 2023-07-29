@@ -92,6 +92,7 @@ export const ImageMetadata = ({ image }: ImageMetadataProps) => {
           <Map
             defaultCenter={[image.gps.latitude || 0, image.gps.longitude || 0]}
             defaultZoom={14}
+            attribution={false}
           >
             <Marker
               width={36}

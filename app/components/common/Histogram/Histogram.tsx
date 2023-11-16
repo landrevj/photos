@@ -13,6 +13,7 @@ import { LinearGradient } from '@visx/gradient';
 
 /** types */
 import type { Image } from '@/types/images';
+import { useId } from 'react';
 
 interface HistogramProps {
   data: Image['histogram'];
@@ -21,6 +22,7 @@ interface HistogramProps {
 }
 
 export const Histogram = ({ data, width, height }: HistogramProps) => {
+  const id = useId();
   const xScale = scaleLinear<number>({
     range: [0, width],
     domain: [0, 255],
@@ -32,54 +34,78 @@ export const Histogram = ({ data, width, height }: HistogramProps) => {
 
   return (
     <svg width={width} height={height}>
-      <LinearGradient id='r-hist-gradient' from='#f83527aa' to='#d12c1faa' />
-      <LinearGradient id='g-hist-gradient' from='#98f635aa' to='#68a924aa' />
-      <LinearGradient id='b-hist-gradient' from='#45b3ffaa' to='#378fccaa' />
-      <LinearGradient id='rg-hist-gradient' from='#fff855aa' to='#f2eb4faa' />
-      <LinearGradient id='gb-hist-gradient' from='#4bf4f1aa' to='#31e1e9aa' />
-      <LinearGradient id='rb-hist-gradient' from='#ff4ed6aa' to='#e346c9aa' />
+      <LinearGradient
+        id={`r-hist-gradient-${id}`}
+        from='#f83527aa'
+        to='#d12c1faa'
+      />
+      <LinearGradient
+        id={`g-hist-gradient-${id}`}
+        from='#98f635aa'
+        to='#68a924aa'
+      />
+      <LinearGradient
+        id={`b-hist-gradient-${id}`}
+        from='#45b3ffaa'
+        to='#378fccaa'
+      />
+      <LinearGradient
+        id={`rg-hist-gradient-${id}`}
+        from='#fff855aa'
+        to='#f2eb4faa'
+      />
+      <LinearGradient
+        id={`gb-hist-gradient-${id}`}
+        from='#4bf4f1aa'
+        to='#31e1e9aa'
+      />
+      <LinearGradient
+        id={`rb-hist-gradient-${id}`}
+        from='#ff4ed6aa'
+        to='#e346c9aa'
+      />
       <Group>
         <AreaClosed
           data={data.channels.red.data}
           x={(_, i) => xScale(i)}
           y={(d) => yScale(d)}
           yScale={yScale}
-          fill='url(#r-hist-gradient)'
+          fill={`url(#r-hist-gradient-${id})`}
         />
         <AreaClosed
           data={data.channels.green.data}
           x={(_, i) => xScale(i)}
           y={(d) => yScale(d)}
           yScale={yScale}
-          fill='url(#g-hist-gradient)'
+          fill={`url(#g-hist-gradient-${id})`}
         />
         <AreaClosed
           data={data.channels.blue.data}
           x={(_, i) => xScale(i)}
           y={(d) => yScale(d)}
           yScale={yScale}
-          fill='url(#b-hist-gradient)'
+          fill={`url(#b-hist-gradient-${id})`}
         />
         <AreaClosed
           data={data.channels.rgOverlap.data}
           x={(_, i) => xScale(i)}
           y={(d) => yScale(d)}
           yScale={yScale}
-          fill='url(#rg-hist-gradient)'
+          fill={`url(#rg-hist-gradient-${id})`}
         />
         <AreaClosed
           data={data.channels.gbOverlap.data}
           x={(_, i) => xScale(i)}
           y={(d) => yScale(d)}
           yScale={yScale}
-          fill='url(#gb-hist-gradient)'
+          fill={`url(#gb-hist-gradient-${id})`}
         />
         <AreaClosed
           data={data.channels.rbOverlap.data}
           x={(_, i) => xScale(i)}
           y={(d) => yScale(d)}
           yScale={yScale}
-          fill='url(#rb-hist-gradient)'
+          fill={`url(#rb-hist-gradient-${id})`}
         />
         <AreaClosed
           data={data.channels.rgbOverlap.data}

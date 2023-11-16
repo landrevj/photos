@@ -26,14 +26,14 @@ export const ClickToEditTextInput = ({
   const [width, setWidth] = useState(0);
 
   useEffect(() => {
-    setWidth(widthRef.current?.clientWidth ?? 0);
+    setWidth(widthRef.current?.clientWidth ?? 100);
   }, [value]);
 
   return (
     <div className={twMerge('relative', className)}>
       <span
         ref={widthRef}
-        className='invisible absolute max-w-full overflow-hidden text-ellipsis whitespace-nowrap'
+        className='invisible absolute overflow-hidden text-ellipsis whitespace-nowrap'
       >
         {value}
       </span>
@@ -49,7 +49,7 @@ export const ClickToEditTextInput = ({
         />
       ) : (
         <button
-          className='max-w-full overflow-hidden text-ellipsis whitespace-nowrap'
+          className='overflow-hidden text-ellipsis whitespace-nowrap'
           type='button'
           onClick={() => setIsEditMode(true)}
         >

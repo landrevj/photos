@@ -14,24 +14,26 @@ import MetadataEditForm from '@/components/ImageView/MetadataEditForm/MetadataEd
 
 /** state */
 import {
+  clearFiles,
+  uploadFileMetadataToDB,
+  uploadFilesToAws,
+} from '@/lib/redux/state/uploader/uploader.slice';
+import {
   getFileMetadataMap,
   getUploaderFiles,
   getUploadFileMetadataToDBStatus,
 } from '@/lib/redux/state/uploader/uploader.selectors';
-import {
-  uploadFileMetadataToDB,
-  uploadFilesToAws,
-} from '@/lib/redux/state/uploader/uploader.slice';
 import { useDispatch, useSelector } from '@/lib/redux';
 
 /** helpers */
 
 /** types */
 interface UploadFormProps {
-  onCancel: () => void;
+  onClose: () => void;
+  onSuccess: () => void;
 }
 
-export const UploadForm = ({ onCancel }: UploadFormProps) => {
+export const UploadForm = ({ onClose, onSuccess }: UploadFormProps) => {
   const dispatch = useDispatch();
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -88,7 +90,7 @@ export const UploadForm = ({ onCancel }: UploadFormProps) => {
             <Button
               color='outline'
               className='text-neutral-500 transition-colors hover:text-red-500'
-              onClick={onCancel}
+              onClick={onClose}
             >
               Cancel
             </Button>
@@ -100,12 +102,15 @@ export const UploadForm = ({ onCancel }: UploadFormProps) => {
               color='primary'
               icon={<MdCloudUpload />}
               isLoading={uploadFileMetadataToDBStatus === 'pending'}
-              onClick={() => {
-                dispatch(
+              onClick={async () => {
+                await dispatch(
                   uploadFileMetadataToDB({
                     uuids: uploaderFiles.map((file) => file.uuid),
                   })
                 );
+                dispatch(clearFiles());
+                onSuccess();
+                onClose();
               }}
             >
               Upload

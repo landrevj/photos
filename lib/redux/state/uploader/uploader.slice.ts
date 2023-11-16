@@ -81,6 +81,9 @@ export const uploaderSlice = createSlice({
     ) => {
       state.currentFiles = [...state.currentFiles, ...payload];
     },
+    clearFiles: (state) => {
+      state.currentFiles = [];
+    },
     setFileProgress: (
       state,
       { payload }: PayloadAction<{ uuid: string; progress: number }>
@@ -123,6 +126,7 @@ export const uploaderSlice = createSlice({
 export default uploaderSlice.reducer;
 export const {
   addFiles,
+  clearFiles,
   setFileAwsFilename,
   setFileProgress,
   setFileMetadata,

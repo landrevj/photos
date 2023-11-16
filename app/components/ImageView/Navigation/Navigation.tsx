@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 /** external components */
 import {
-  MdArrowBackIos,
+  MdArrowBackIosNew,
   MdArrowForwardIos,
   MdKeyboardBackspace,
   MdRestartAlt,
@@ -108,7 +108,7 @@ export const Navigation = ({
           )}
           color='transparent'
           onClick={onNavBackward}
-          icon={<MdArrowBackIos className='text-2xl' />}
+          icon={<MdArrowBackIosNew className='text-2xl' />}
         />
         <Button
           className={clsx(

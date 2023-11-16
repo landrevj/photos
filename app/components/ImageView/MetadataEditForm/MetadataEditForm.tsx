@@ -28,6 +28,7 @@ import { setFileMetadata } from '@/lib/redux/state/uploader/uploader.slice';
 /** helpers */
 import { bytesToMB } from '@/lib/math';
 import { getImageFileData } from '@/lib/images/utils';
+import LoadingSkeleton from './LoadingSkeleton/LoadingSkeleton';
 
 /** types */
 interface MetadataEditFormProps {
@@ -51,10 +52,25 @@ export const MetadataEditForm = ({
   const state = fileProgress[uuid || ''];
 
   useEffect(() => {
+    const getMetadata = async (uuid: string, file: File) => {
+      dispatch(
+        setFileMetadata({
+          uuid,
+          metadata: await getImageFileData(file),
+        })
+      );
+    };
+
+    if (uuid && file && !Object.keys(metadata).length) {
+      getMetadata(uuid, file);
+    }
     setYMaxMaximum((metadata.histogram?.yMax ?? 0) * 2);
   }, [uuid]);
 
   if (!file || !uuid) return null;
+  if (!Object.keys(metadata).length) {
+    return <LoadingSkeleton className={className} />;
+  }
 
   return (
     <div

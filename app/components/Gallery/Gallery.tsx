@@ -62,8 +62,10 @@ export const Gallery = () => {
           }}
         >
           <UploadForm
-            onCancel={() => {
+            onClose={() => {
               setIsUploadDialogOpen(false);
+            }}
+            onSuccess={() => {
               refetch();
             }}
           />

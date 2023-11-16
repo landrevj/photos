@@ -12,7 +12,7 @@ import Paper from '../Paper/Paper';
 import type { HTMLAttributes, ReactNode } from 'react';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
 }
 

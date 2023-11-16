@@ -15,7 +15,7 @@ interface NavbarProps {
 
 export const Navbar = ({ activeRoute }: NavbarProps) => {
   return (
-    <nav className='flex h-[12.5vh] items-center'>
+    <nav className='flex h-40 items-center'>
       <Button
         color='transparent'
         href='/'

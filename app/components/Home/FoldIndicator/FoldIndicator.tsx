@@ -31,7 +31,7 @@ export const FoldIndicator = () => {
   }, []);
 
   return (
-    <div className='flex h-[12.5vh] w-full items-center justify-center'>
+    <div className='flex h-40 w-full items-center justify-center'>
       <MdArrowDownward
         className={clsx(
           'text-2xl transition-colors',

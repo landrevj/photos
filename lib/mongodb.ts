@@ -1,6 +1,10 @@
-import { MongoClient } from 'mongodb';
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable no-var */
+/* eslint-disable vars-on-top */
+/* eslint-disable no-underscore-dangle */
+import { MongoClient, ObjectId as MongoObjectId } from 'mongodb';
 
-const uri = process.env.MONGODB_URI as string; // your mongodb connection string
+const uri = process.env.MONGODB_URI ?? ''; // your mongodb connection string
 const options = {};
 
 declare global {
@@ -9,8 +13,11 @@ declare global {
 
 class Singleton {
   private static _instance: Singleton;
+
   private client: MongoClient;
+
   private clientPromise: Promise<MongoClient>;
+
   private constructor() {
     this.client = new MongoClient(uri, options);
     this.clientPromise = this.client.connect();
@@ -29,6 +36,8 @@ class Singleton {
   }
 }
 const clientPromise = Singleton.instance;
+
+export const ObjectId = MongoObjectId;
 
 // Export a module-scoped MongoClient promise. By doing this in a
 // separate module, the client can be shared across functions.

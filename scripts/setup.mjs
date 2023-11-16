@@ -1,6 +1,6 @@
-import { MongoClient } from 'mongodb';
-import { faker } from '@faker-js/faker';
 import dotenv from 'dotenv';
+import { faker } from '@faker-js/faker';
+import { MongoClient } from 'mongodb';
 
 dotenv.config();
 
@@ -34,7 +34,7 @@ const setup = async () => {
         email,
         image,
         followers: 0,
-        emailVerified: null
+        emailVerified: null,
       };
     });
 

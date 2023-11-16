@@ -4,16 +4,18 @@ const nextConfig = {
   reactStrictMode: true,
   images: {
     domains: [
-      'avatars.githubusercontent.com',
-      'avatar.tobi.sh',
-      'cloudflare-ipfs.com',
-      'loremflickr.com'
-    ]
+      `${process.env.S3_BUCKET_NAME}.s3-${process.env.AWS_REGION}.amazonaws.com`,
+    ],
   },
   experimental: {
     legacyBrowsers: false,
-    browsersListForSwc: true
-  }
+  },
+  webpack: (config) => {
+    // @see https://github.com/konvajs/konva/issues/1458#issuecomment-1356122802
+    // eslint-disable-next-line no-param-reassign
+    config.externals = [...config.externals, { canvas: 'canvas' }];
+    return config;
+  },
 };
 
 module.exports = nextConfig;
